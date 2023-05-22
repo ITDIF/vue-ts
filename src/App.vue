@@ -1,11 +1,21 @@
 <template>
   <nav>
+    <router-link to="/login">Login</router-link> |
     <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
+    <router-link to="/about">About</router-link> |
+    <router-link to="/user">User</router-link> |
+    <router-link to="/pay">Pay</router-link> |
+    <router-link to="/t2">t222</router-link> |
+    <router-link to="/register">Register</router-link> |
+    <router-link to="/ticket">ticket</router-link> |
+    <router-link to="/order">Order</router-link> |
   </nav>
   <router-view/>
 </template>
+<script lang="ts" setup>
 
+
+</script>
 <style>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;

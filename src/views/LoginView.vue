@@ -8,12 +8,18 @@
   <div class="content">
     <div class="login-box">
       <h1>登 录</h1>
-      <form action="">
-        <input type="text" name="username" placeholder="请输入手机号" accesskey="n">
-        <input type="password" name="password" id="" placeholder="请输入密码" accesskey="p">
-        <p></p>
-        <input type="submit" id="submit"  value="登录" accesskey="s" >
-      </form>
+      <el-form>
+        <el-form-item>
+          <el-input v-model="form.account" size="large" clearable placeholder="用户名/手机号" :prefix-icon="User"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-input v-model="form.password" type="password" show-password clearable size="large" placeholder="密码" :prefix-icon="Lock"></el-input>
+        </el-form-item>
+        <el-form-item style="margin-top: 25px">
+          <el-button type="primary" size="large" @click="onSubmit" round style="width: 90%;margin: 0 auto">登录</el-button>
+        </el-form-item>
+      </el-form>
+
       <a href="#" style="float: left">立即注册</a>
       <a href="#" style="float: right;">忘记密码</a>
     </div>
@@ -21,100 +27,71 @@
 </div>
 </template>
 
-<script>
-export default {
-  name: "LoginView.vue"
+<script lang="ts" setup>
+import { ref,reactive,getCurrentInstance } from 'vue'
+import axios from 'axios'
+import {useRouter} from 'vue-router'
+import { User,Lock } from '@element-plus/icons-vue'
+import type { FormInstance } from 'element-plus'
+import { ElMessage } from 'element-plus'
+const form = reactive({
+  account: 's123',
+  password: '123',
+  error: ''
+})
+const router = useRouter()
+const onSubmit = () => {
+  console.log('submit!')
+  if(form.account == '' || form.password == '') {
+    ElMessage({
+      showClose: true,
+      message: '账户不能为空!',
+      type: 'warning',
+    })
+    return
+  }
+
+  axios.get('http://localhost:8081/login/loginCheck',{
+    params:{
+      account: form.account,
+      password: form.password
+    }
+  }).then((res)=>{
+    console.log(res.data)
+    if(res.data=='登录成功!'){
+      ElMessage({
+        showClose: true,
+        message: res.data,
+        type: 'success',
+      })
+      router.push({
+        path: '/',
+        query:{
+          account: form.account
+        }
+      });
+    }else {
+      ElMessage({
+        showClose: true,
+        message: res.data,
+        type: 'error',
+      })
+    }
+  })
 }
 </script>
 
 <style scoped>
 #app{
-  height: 1200px;
-  background: url(../assets/images/login/b.jpeg) no-repeat;
-  background-size: 100% 100%;
-}
-.w{
-  width: 100%;
-  height: 100px;
+  width: 20%;
   margin: 0 auto;
-}
-.logo{
-  position: relative;
-  width: 300px;
-  margin: 10px 0;
-  height: 60px;
-  float: left;
-  line-height: 60px;
-}
-.logo a {
-  /* color: #666; */
-  color: black;
-  text-decoration: none;
-  font-size: 80px;
-}
-.content{
-  width: 100%;
-
-  /* background: url(img/login/b.jpeg) no-repeat; */
-  background-size: 100% 100%;
-}
-.login-box {
-  width: 600px;
-  height: 800px;
-  margin: 0 auto 0;
-  background-color: #fff;
-  padding: 40px 140px 120px 140px;
-  position: relative;
-  border-radius: 20px;
-}
-.login-box h1{
-  text-align: center;
-  padding-bottom: 40px;
-  font-size: 60px;
-}
-.login-box input{
-  width: 600px;
-  height: 100px;
-  line-height: 100px;
-  margin: 0 0 40px 0;
-  font-size: 40px;
-  border: none;
-  outline: none;
-}
-.login-box form input:nth-of-type(1){
-  width: 540px;
-  padding: 0 0 0 48px;
-  background: url(../assets/images/login/user.png) no-repeat;
-  background-size: 36px;
-  background-position: 0px;
-  font-size: 40px;
-  border-bottom: 1px solid #666;
-}
-.login-box form input:nth-of-type(2){
-  width: 540px;
-  padding: 0 0 0 48px;
-  margin-bottom: 0;
-  background: url(../assets/images/login/lock.png) no-repeat;
-  background-size: 28px;
-  background-position: 0px;
-  font-size: 40px;
-  border-bottom: 1px solid #666;
-}
-.login-box form input:last-of-type{
-  margin-top: 80px;
-  color: white;
-  background-color: #2491F2;
-  border: none;
-  border-radius: 60px;
-  margin-bottom: 80px;
-}
-.login-box form input:last-of-type:hover{
-  background-color: #2b11ee;
+  /*border: 1px solid #d2d3d2;*/
+  /*border-radius: 4px;*/
+  /*padding: 0 4em 4em 4em;*/
 }
 .login-box a{
   text-decoration: none;
   color: #6c6c6c;
-  font-size: 40px;
 }
 .login-box a:hover{
   color: red;

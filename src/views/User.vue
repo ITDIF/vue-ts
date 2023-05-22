@@ -11,15 +11,14 @@
     </ul>
   </div>
 </template>
-<script>
+<script lang="js" setup>
 import axios from 'axios'
 export default {
-
-  name: "User",
+  name: 'User',
   data(){
     return{
       n : 1000,
-      m :"",
+      m : '',
       users:[]
     }
   },
