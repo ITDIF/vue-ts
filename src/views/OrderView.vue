@@ -151,6 +151,7 @@ onMounted(() => {
     // console.log(2,routeInfo.data.remaining_tickets)
   })
 })
+//下单
 const submit = () => {
   console.log('submit')
   router.push({

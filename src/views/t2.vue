@@ -8,9 +8,9 @@
 import {onMounted,onUnmounted,reactive,onBeforeMount} from "vue"
 import moment from "moment";
 import {setup} from "vue-class-component";
-let timer = 0
+let timer = null as any
 const countdown = reactive({
-  time: 9000
+  time: 90000
 })
 onBeforeMount(()=>{
   timer = setInterval(() => {
