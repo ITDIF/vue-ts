@@ -74,10 +74,10 @@ const form = reactive({
 onBeforeMount(()=>{
   // console.log(route.query.start,route.query.end)
   form.days.pop()
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i <= 10; i++) {
     form.days.push(moment().add(i, 'days').format("MM-DD"))
   }
-  axios.get('http://localhost:8081/route/queryCarRouteBySE',{
+  axios.get('http://localhost:8081/route/queryCarRouteBySED',{
     params:{
       start: codeToText[form.start![0]!].concat(codeToText[form.start![1]!]),
       end: codeToText[form.end![0]!].concat(codeToText[form.end![1]!]),
@@ -94,7 +94,7 @@ onBeforeMount(()=>{
 const tabClick = () =>{
   // console.log('click: ',form.now,form.now)
   time = moment().year()+"-"+form.now!.toString()
-  axios.get('http://localhost:8081/route/queryCarRouteBySE',{
+  axios.get('http://localhost:8081/route/queryCarRouteBySED',{
     params:{
       start: codeToText[form.start![0]!].concat(codeToText[form.start![1]!]),
       end: codeToText[form.end![0]!].concat(codeToText[form.end![1]!]),
@@ -116,9 +116,18 @@ interface routeInfo {
   price: number
   seat_type: string
 }
+//预订
 const submit = (row: routeInfo) => {
   // console.log(codeToText[form.start[0]],codeToText[form.start[1]],codeToText[form.end[0]],codeToText[form.end[1]])
   console.log('submit:',row)
+  if(row.remaining_tickets == '0'){
+    ElMessage({
+      showClose: true,
+      message: '票已售完！请购买其他车次',
+      type: 'error',
+    })
+    return
+  }
   router.push({
     path: '/order',
     query: {

@@ -4,7 +4,10 @@
       <el-header>Header</el-header>
       <el-main style="width: 90%; margin: auto">
         <el-card class="card-header">
-          <el-text>座位已锁定，请在提示时间内尽快完成支付，完成网上购票。 支付剩余时间：</el-text>
+          <el-text>座位已锁定，请在提示时间内尽快完成支付，完成网上购票。 支付剩余时间：
+            <b style="color: red">{{moment(countdown.time).format("mm")}}</b> 分
+            <b style="color: red">{{moment(countdown.time).format("ss")}}</b> 秒
+          </el-text>
         </el-card>
         <el-card>
           <template #header>
@@ -38,6 +41,7 @@
         <el-button
             type="info"
             style="width: 100px;margin-right: 40px"
+            @click="cancelOrder"
         >取消订单</el-button>
         <el-button type="warning" style="width: 100px">网上支付</el-button>
       </el-main>
@@ -47,7 +51,7 @@
 </template>
 
 <script lang="ts" setup>
-import {onMounted, reactive, ref} from "vue";
+import {onBeforeMount, onMounted, onUnmounted, reactive, ref} from "vue";
 import type { FormInstance, FormRules } from 'element-plus'
 import {useRoute, useRouter} from "vue-router";
 import moment from "moment";
@@ -58,10 +62,26 @@ const router = useRouter()
 const formRef = ref<FormInstance>()
 const routeInfo = JSON.parse(route.query.routeInfo as string)
 const account = route.query.account
+const orderId = route.query.orderId
 const carInfo = JSON.parse(route.query.carInfo as string)
-
+let orderTime = ""
 const orderInfo = reactive({
   user: [] as any
+})
+
+let timer = null as any
+const countdown = reactive({
+  time: 600000
+})
+onBeforeMount(()=>{
+  timer = setInterval(() => {
+    countdown.time -= 1000
+    console.log(moment(countdown.time).format("mm:ss"))
+    if(countdown.time <= 0){
+      countdown.time = 0
+      clearInterval(timer)
+    }
+  },1000)
 })
 onMounted(() => {
   axios.get('http://localhost:8081/login/login',{
@@ -74,8 +94,46 @@ onMounted(() => {
     res.data.price = routeInfo.price+'元'
     orderInfo.user.push(res.data)
   })
+  axios.get('http://localhost:8081/order/queryOrderTimeByOrderNumber',{
+    params:{
+      order_number: orderId
+    }
+  }).then((res)=>{
+    orderTime = res.data
+    countdown.time -= moment().diff(moment(res.data))
+    console.log('orderTimeDiffs',moment().diff(moment(res.data)))
+  })
 })
 
+onUnmounted(()=>{
+  clearInterval(timer)
+})
+
+const cancelOrder = () => {
+  console.log('取消订单！')
+  axios.get('http://localhost:8081/order/deleteOrderTemporaryAndTicket',{
+    params:{
+      order_number: orderId,
+      date: carInfo.date
+    }
+  }).then((res)=>{
+    console.log(res.data)
+    if(res.data == '1'){
+      ElMessage({
+        showClose: true,
+        message: '订单成功取消！',
+        type: 'success',
+      })
+      window.history.back()
+    }else{
+      ElMessage({
+        showClose: true,
+        message: '订单取消失败，请重新尝试！',
+        type: 'error',
+      })
+    }
+  })
+}
 </script>
 
 <style scoped>

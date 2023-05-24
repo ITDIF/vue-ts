@@ -154,14 +154,34 @@ onMounted(() => {
 //下单
 const submit = () => {
   console.log('submit')
-  router.push({
-    path: '/pay',
-    query: {
-      routeInfo: JSON.stringify(routeInfo.data),
-      carInfo: JSON.stringify(carInfo),
-      account: account,
+  axios.get('http://localhost:8081/order/temporary',{
+    params:{
+      route_number: routeInfo.data.route_number,
+      route_date: time,
+      account: account
     }
+  }).then((res)=>{
+    console.log(res.data)
+    if(res.data == -1){
+      ElMessage({
+        showClose: true,
+        message: '票已售完！请购买其他车次',
+        type: 'error',
+      })
+    }else{
+      router.push({
+        path: '/pay',
+        query: {
+          routeInfo: JSON.stringify(routeInfo.data),
+          carInfo: JSON.stringify(carInfo),
+          account: account,
+          orderId: res.data
+        }
+      })
+    }
+
   })
+
 }
 
 //回退
