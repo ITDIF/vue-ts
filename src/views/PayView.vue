@@ -41,13 +41,34 @@
         <el-button
             type="info"
             style="width: 100px;margin-right: 40px"
-            @click="cancelOrder"
+            @click="dialogVisible = true"
         >取消订单</el-button>
-        <el-button type="warning" style="width: 100px">网上支付</el-button>
+        <el-button
+            type="warning"
+            style="width: 100px"
+            @click="onlinePayment"
+        >网上支付</el-button>
       </el-main>
       <el-footer>Footer</el-footer>
     </el-container>
   </div>
+  <el-dialog
+      v-model="dialogVisible"
+      title="取消订单"
+      width="30%"
+      center
+      align-center
+  >
+    <span>确定取消订单吗？</span>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="dialogVisible = false">取消</el-button>
+        <el-button type="primary" @click="dialogVisible = false; cancelOrder()">
+          确定
+        </el-button>
+      </span>
+    </template>
+  </el-dialog>
 </template>
 
 <script lang="ts" setup>
@@ -65,6 +86,9 @@ const account = route.query.account
 const orderId = route.query.orderId
 const carInfo = JSON.parse(route.query.carInfo as string)
 let orderTime = ""
+const dialogVisible = ref(false)
+
+
 const orderInfo = reactive({
   user: [] as any
 })
@@ -129,6 +153,30 @@ const cancelOrder = () => {
       ElMessage({
         showClose: true,
         message: '订单取消失败，请重新尝试！',
+        type: 'error',
+      })
+    }
+  })
+}
+const onlinePayment = () => {
+  console.log('网上支付！')
+  axios.get('http://localhost:8081/order/addOrderAndDelTemporary',{
+    params:{
+      order_number: orderId
+    }
+  }).then((res)=>{
+    console.log(res.data)
+    if(res.data == '1'){
+      ElMessage({
+        showClose: true,
+        message: '支付成功！',
+        type: 'success',
+      })
+      window.history.back()
+    }else{
+      ElMessage({
+        showClose: true,
+        message: '支付失败，请重新尝试！',
         type: 'error',
       })
     }
