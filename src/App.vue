@@ -11,11 +11,36 @@
     <router-link to="/ticket">ticket</router-link> |
     <router-link to="/order">Order</router-link> |
   </nav>
+  <el-container>
+    <el-header style="background-color: #F8F8F8;width: 90%;height: 40px;line-height: 40px;margin: auto">
+      <div style="float: right;margin-right: 20px">
+        <el-link :underline="false" @click="onLogin">{{ store.state.account }}</el-link> |
+        <el-link :underline="false" @click="onRegister">{{ store.state.register }}</el-link>
+      </div>
+    </el-header>
+  </el-container>
+
   <router-view/>
+
 </template>
 <script lang="ts" setup>
+import {useRoute, useRouter} from "vue-router";
+import {ref, reactive, onMounted} from 'vue'
+import {useStore} from "vuex";
 
+let account = null
 
+const route = useRoute()
+const router = useRouter()
+const store = useStore()
+const onLogin = () => {
+  router.push('/login')
+}
+const onRegister = () => {
+  if(store.state.register == '注册') {
+    router.push('/register')
+  }
+}
 </script>
 <style>
 #app {

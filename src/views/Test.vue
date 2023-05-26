@@ -12,20 +12,33 @@
 
 <script lang="ts" setup>
 
+import {onMounted, onUnmounted} from "vue";
+import {setup} from "vue-class-component";
+let ws = null as any
 
-
-import axios from "axios";
-
-let jsonStr = [{name:'ji' , id:20} , {name:'king' , id:26},{name:'jge' , id:30}]
-axios.get('http://localhost:8081/order/temporary',{
-  params:{
-    data: JSON.stringify(jsonStr)
+console.log()
+onMounted(()=>{
+  if('WebSocket' in window){
+    console.log('浏览器支持WebSocket')
+    ws = new WebSocket('ws://localhost:8081/websocket/2')
+    ws.onopen = function() {
+      console.log("Connection open ...");
+      ws.send("Hello WebSockets!");
+    };
+    ws.onmessage = function (res: any) {
+      console.log('------')
+      console.log(res.data)
+    }
+  }else{
+    alert('浏览器不支持WebSocket！')
   }
-}).then((res)=>{
-  console.log(res.data)
 })
 
 
+
+onUnmounted(() => {
+  ws.close();
+});
 </script>
 <style>
 .card-header {

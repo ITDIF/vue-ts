@@ -34,11 +34,13 @@ import {useRouter} from 'vue-router'
 import { User,Lock } from '@element-plus/icons-vue'
 import type { FormInstance } from 'element-plus'
 import { ElMessage } from 'element-plus'
+import {useStore} from "vuex";
 const form = reactive({
   account: 's123',
   password: '123',
   error: ''
 })
+const store = useStore()
 const router = useRouter()
 const onSubmit = () => {
   console.log('submit!')
@@ -64,6 +66,7 @@ const onSubmit = () => {
         message: res.data,
         type: 'success',
       })
+      store.state.account = form.account
       router.push({
         path: '/',
         query:{

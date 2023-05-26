@@ -1,7 +1,6 @@
 <template>
   <div class="common-layout">
     <el-container>
-      <el-header>Header</el-header>
       <el-main style="margin: auto;">
         <el-form
             ref="formRef"
