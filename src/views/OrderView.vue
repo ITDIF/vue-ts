@@ -100,10 +100,12 @@ import {useRoute, useRouter} from "vue-router";
 import moment from "moment";
 import axios from "axios";
 import {ElMessage, ElMessageBox} from "element-plus";
+import {useStore} from "vuex";
 const route = useRoute()
 const router = useRouter()
+const store = useStore()
 const formRef = ref<FormInstance>()
-const account = route.query.account
+// const account = route.query.account
 const time = route.query.time
 // const routeInfo = JSON.parse(route.query.routeInfo as string)
 const dialogVisible = ref(false)
@@ -131,9 +133,10 @@ const userInfo = reactive({
 
 
 onMounted(() => {
+  console.log('tttt',store.state.account)
   axios.get('http://localhost:8081/login/login',{
     params:{
-      account: account
+      account: store.state.account
     }
   }).then((res)=>{
     // console.log(res.data)
@@ -158,7 +161,7 @@ const submit = () => {
     params:{
       route_number: routeInfo.data.route_number,
       route_date: time,
-      account: account
+      account: store.state.account
     }
   }).then((res)=>{
     console.log(res.data)
@@ -174,7 +177,7 @@ const submit = () => {
         query: {
           routeInfo: JSON.stringify(routeInfo.data),
           carInfo: JSON.stringify(carInfo),
-          account: account,
+          account: store.state.account,
           orderId: res.data
         }
       })

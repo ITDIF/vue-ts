@@ -14,7 +14,7 @@
   <el-container>
     <el-header style="background-color: #F8F8F8;width: 90%;height: 40px;line-height: 40px;margin: auto">
       <div style="float: right;margin-right: 20px">
-        <el-link :underline="false" @click="onLogin">{{ store.state.account }}</el-link> |
+        <el-link :underline="false" @click="onLogin">{{ store.state.login }}</el-link> |
         <el-link :underline="false" @click="onRegister">{{ store.state.register }}</el-link>
       </div>
     </el-header>
@@ -27,6 +27,7 @@
 import {useRoute, useRouter} from "vue-router";
 import {ref, reactive, onMounted} from 'vue'
 import {useStore} from "vuex";
+import {setup} from "vue-class-component";
 
 let account = null
 
@@ -34,13 +35,21 @@ const route = useRoute()
 const router = useRouter()
 const store = useStore()
 const onLogin = () => {
-  router.push('/login')
+  if(store.state.login == '登录'){
+    router.push('/login')
+  }else{
+    console.log('----')
+  }
 }
 const onRegister = () => {
   if(store.state.register == '注册') {
     router.push('/register')
+  }else{
+    store.state.login = '登录'
+    store.state.register = '注册'
   }
 }
+
 </script>
 <style>
 #app {

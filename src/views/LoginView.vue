@@ -42,6 +42,7 @@ const form = reactive({
 })
 const store = useStore()
 const router = useRouter()
+//登录
 const onSubmit = () => {
   console.log('submit!')
   if(form.account == '' || form.password == '') {
@@ -66,7 +67,16 @@ const onSubmit = () => {
         message: res.data,
         type: 'success',
       })
-      store.state.account = form.account
+      store.commit('changeAccount',form.account)
+      axios.get('http://localhost:8081/login/username',{
+        params:{
+          account: form.account
+        }
+      }).then((res)=>{
+        store.commit('changeUsername',res.data)
+        store.commit('changeLogin',res.data)
+        store.commit('changeRegister','退出')
+      })
       router.push({
         path: '/',
         query:{

@@ -1,22 +1,27 @@
 <template>
-  <el-card class="box-card">
-    <template #header>
-      <div class="card-header">
-        <span>Card name</span>
-        <el-button class="button" text>Operation button</el-button>
-      </div>
-    </template>
-    <div v-for="o in 4" :key="o" class="text item">{{ 'List item ' + o }}</div>
-  </el-card>
+  <el-text>
+  {{store.state.count}}
+  </el-text>
+  <el-button @click="dj">
+    +10
+  </el-button>
 </template>
 
 <script lang="ts" setup>
 
 import {onMounted, onUnmounted} from "vue";
 import {setup} from "vue-class-component";
+import {useStore} from "vuex";
 let ws = null as any
+const store = useStore()
+console.log('account:',store.state.account)
 
-console.log()
+const dj = () => {
+  // store.commit('increment')
+  // store.state.count = 100
+  store.commit('changeAccount','1011100')
+  console.log('account:',store.state.account)
+}
 onMounted(()=>{
   if('WebSocket' in window){
     console.log('浏览器支持WebSocket')
@@ -33,7 +38,6 @@ onMounted(()=>{
     alert('浏览器不支持WebSocket！')
   }
 })
-
 
 
 onUnmounted(() => {
