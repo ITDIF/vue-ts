@@ -5,6 +5,9 @@
   <el-button @click="dj">
     +10
   </el-button>
+  <el-button @click="buy">
+    买票
+  </el-button>
 </template>
 
 <script lang="ts" setup>
@@ -12,6 +15,8 @@
 import {onMounted, onUnmounted} from "vue";
 import {setup} from "vue-class-component";
 import {useStore} from "vuex";
+import axios from "axios";
+import {ElMessage} from "element-plus";
 let ws = null as any
 const store = useStore()
 console.log('account:',store.state.account)
@@ -19,13 +24,22 @@ console.log('account:',store.state.account)
 const dj = () => {
   // store.commit('increment')
   // store.state.count = 100
-  store.commit('changeAccount','1011100')
-  console.log('account:',store.state.account)
+  // store.commit('changeAccount','1011100')
+  // console.log('account:',store.state.account)
+  axios.get('http://localhost:8081/webSocket/w2',).then((res)=>{
+    console.log(res.data)
+  })
 }
+const buy = () => {
+  axios.get('http://localhost:8081/ticket').then((res)=>{
+    console.log(res.data)
+  })
+}
+
 onMounted(()=>{
   if('WebSocket' in window){
     console.log('浏览器支持WebSocket')
-    ws = new WebSocket('ws://localhost:8081/websocket/2')
+    ws = new WebSocket('ws://localhost:8081/ticket/2')
     ws.onopen = function() {
       console.log("Connection open ...");
       ws.send("Hello WebSockets!");

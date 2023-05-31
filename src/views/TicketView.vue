@@ -38,6 +38,7 @@
             <el-table-column label="备注">
               <template #default="scope">
                 <el-button type="primary" @click="submit(scope.row)">预订</el-button>
+                <el-button type="warning">候补</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -57,10 +58,12 @@ import {useRoute, useRouter} from "vue-router";
 import moment from "moment";
 import axios from "axios";
 import {ElMessage} from "element-plus";
+import {useStore} from "vuex";
 const route = useRoute()
 const router = useRouter()
 const formRef = ref<FormInstance>()
-const account = route.query.account
+const store = useStore()
+const account = store.state.account
 let time = route.query.date
 const form = reactive({
   options: provinceAndCityData,

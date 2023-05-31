@@ -37,10 +37,12 @@ import { regionData,provinceAndCityData, codeToText } from 'element-china-area-d
 import type { FormInstance, FormRules } from 'element-plus'
 import {useRouter,useRoute} from "vue-router";
 import {ElMessage} from "element-plus";
+import {useStore} from "vuex";
 const router = useRouter()
 const route = useRoute()
 const formRef = ref<FormInstance>()
-const account = route.query.account
+const store = useStore()
+const account = store.state.account
 const form = reactive({
   options: provinceAndCityData,
   start: [''],
@@ -51,6 +53,7 @@ const form = reactive({
 
 const submit = (formEl: FormInstance | undefined) => {
   if (!formEl) return
+  // console.log(form.start[0],form.start[1],form.end[0],form.end[1])
   // console.log(codeToText[form.start[0]],codeToText[form.start[1]],codeToText[form.end[0]],
   //     codeToText[form.end[1]],form.date)
   formEl.validate((valid) => {
@@ -93,8 +96,8 @@ const disabledDate = (time: Date) => {
 
 //test
 onMounted(()=>{
-  form.start = ["13","1301"]
-  form.end = ["13","1301"]
+  form.start = ["36","3605"]
+  form.end = ["36","3607"]
 })
 
 </script>

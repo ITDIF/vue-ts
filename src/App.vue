@@ -45,8 +45,8 @@ const onRegister = () => {
   if(store.state.register == '注册') {
     router.push('/register')
   }else{
-    store.state.login = '登录'
-    store.state.register = '注册'
+    store.commit('changeLogin','登录')
+    store.commit('changeRegister','注册')
   }
 }
 
