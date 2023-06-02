@@ -133,7 +133,7 @@ const userInfo = reactive({
 
 
 onMounted(() => {
-  console.log('tttt',store.state.account)
+  // console.log('tttt',store.state.account)
   axios.get('http://localhost:8081/login/login',{
     params:{
       account: store.state.account

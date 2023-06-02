@@ -28,6 +28,7 @@ import {useRoute, useRouter} from "vue-router";
 import {ref, reactive, onMounted} from 'vue'
 import {useStore} from "vuex";
 import {setup} from "vue-class-component";
+import { ElMessage, ElMessageBox } from 'element-plus'
 
 let account = null
 
@@ -45,8 +46,28 @@ const onRegister = () => {
   if(store.state.register == '注册') {
     router.push('/register')
   }else{
-    store.commit('changeLogin','登录')
-    store.commit('changeRegister','注册')
+    ElMessageBox.confirm(
+        '是否退出账户',
+        {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
+        }
+    ).then(() => {
+          store.commit('changeLogin','登录')
+          store.commit('changeAccount','000')
+          store.commit('changeUsername','000')
+          store.commit('changeRegister','注册')
+          ElMessage({
+            type: 'success',
+            message: '成功退出',
+          })
+        }).catch(() => {
+          ElMessage({
+            type: 'info',
+            message: '操作取消',
+          })
+        })
   }
 }
 

@@ -77,12 +77,7 @@ const onSubmit = () => {
         store.commit('changeLogin',res.data)
         store.commit('changeRegister','退出')
       })
-      router.push({
-        path: '/',
-        query:{
-          account: form.account
-        }
-      });
+      window.history.back()
     }else {
       ElMessage({
         showClose: true,

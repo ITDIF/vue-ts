@@ -24,7 +24,7 @@
           </el-form-item>
         </el-form>
       </el-main>
-      <el-footer>Footer</el-footer>
+      <el-footer></el-footer>
     </el-container>
   </div>
 </template>

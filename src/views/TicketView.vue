@@ -63,7 +63,6 @@ const route = useRoute()
 const router = useRouter()
 const formRef = ref<FormInstance>()
 const store = useStore()
-const account = store.state.account
 let time = route.query.date
 const form = reactive({
   options: provinceAndCityData,
@@ -123,6 +122,10 @@ interface routeInfo {
 const submit = (row: routeInfo) => {
   // console.log(codeToText[form.start[0]],codeToText[form.start[1]],codeToText[form.end[0]],codeToText[form.end[1]])
   console.log('submit:',row)
+  if(store.state.account == '000'){
+    router.push('/login')
+    return
+  }
   if(row.remaining_tickets == '0'){
     ElMessage({
       showClose: true,
@@ -136,7 +139,7 @@ const submit = (row: routeInfo) => {
     query: {
       time: time,
       routeInfo: JSON.stringify(row),
-      account: account
+      account: store.state.account
     }
   })
 }
