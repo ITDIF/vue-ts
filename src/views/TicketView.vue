@@ -2,7 +2,7 @@
   <div class="common-layout">
     <el-container>
       <el-header>Header</el-header>
-      <el-main style="margin: auto; border: 1px solid #979a9a; width: 80%;">
+      <el-main style="margin: auto; border: 1px solid #979a9a; width: 90%;">
         <el-form label-width="70px" :inline="true">
           <el-form-item label="出发地" style="margin-bottom: 0">
             <el-cascader :options='form.options' v-model='form.start' :show-all-levels="false" style="width: 200px;"></el-cascader>
@@ -18,7 +18,7 @@
           </el-form-item>
         </el-form>
       </el-main>
-      <el-main style="width: 83%;margin: auto">
+      <el-main style="width: 93%;margin: auto">
         <el-tabs type="border-card" @tab-change="tabClick" v-model="form.now" stretch>
           <el-tab-pane v-for="item in form.days" :name="item" :label="item"></el-tab-pane>
           <el-table
@@ -37,8 +37,8 @@
             <el-table-column prop="price" label="票价" />
             <el-table-column label="备注">
               <template #default="scope">
-                <el-button type="primary" @click="submit(scope.row)">预订</el-button>
-                <el-button type="warning">候补</el-button>
+                <el-button type="primary" :disabled="isClick(scope.row.remaining_tickets)" @click="submit(scope.row)">预订</el-button>
+                <el-button type="warning" :disabled="!isClick(scope.row.remaining_tickets)" @click="candidate(scope.row)">候补</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -92,7 +92,11 @@ onBeforeMount(()=>{
 
   })
 })
-
+//预订，候补按钮是否可以点击
+const isClick = (rt: any) => {
+  // console.log('isClick',rt)
+  return rt == 0
+}
 const tabClick = () =>{
   // console.log('click: ',form.now,form.now)
   time = moment().year()+"-"+form.now!.toString()
@@ -143,6 +147,23 @@ const submit = (row: routeInfo) => {
     }
   })
 }
+//候补
+const candidate = (row : routeInfo) =>{
+  console.log('candidate:',row)
+  if(store.state.account == '000'){
+    router.push('/login')
+    return
+  }
+  router.push({
+    path: '/candidate',
+    query: {
+      time: time,
+      routeInfo: JSON.stringify(row),
+      account: store.state.account
+    }
+  })
+}
+
 //限制可选日期
 const disabledDate = (time: Date) => {
   return time.getTime() < Date.now()-86400000 || time.getTime() > Date.now()+86400000*10

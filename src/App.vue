@@ -4,12 +4,10 @@
     <router-link to="/">Home</router-link> |
     <router-link to="/about">About</router-link> |
     <router-link to="/user">User</router-link> |
-    <router-link to="/pay">Pay</router-link> |
     <router-link to="/t2">t222</router-link> |
     <router-link to="/test">test</router-link> |
     <router-link to="/register">Register</router-link> |
-    <router-link to="/ticket">ticket</router-link> |
-    <router-link to="/order">Order</router-link> |
+    <router-link to="/candidate">candidate</router-link> |
   </nav>
   <el-container>
     <el-header style="background-color: #F8F8F8;width: 90%;height: 40px;line-height: 40px;margin: auto">

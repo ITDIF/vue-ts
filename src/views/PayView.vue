@@ -104,6 +104,7 @@ onBeforeMount(()=>{
     if(countdown.time <= 0){
       countdown.time = 0
       clearInterval(timer)
+      window.history.back()
     }
   },1000)
 })
