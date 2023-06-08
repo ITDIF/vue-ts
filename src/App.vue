@@ -1,6 +1,6 @@
 <template>
   <nav>
-    <router-link to="/login">Login</router-link> |
+    <router-link to="/personalCenterView">PersonalCenter</router-link> |
     <router-link to="/">Home</router-link> |
     <router-link to="/about">About</router-link> |
     <router-link to="/user">User</router-link> |
@@ -37,7 +37,7 @@ const onLogin = () => {
   if(store.state.login == '登录'){
     router.push('/login')
   }else{
-    console.log('----')
+    router.push('/personalCenterView')
   }
 }
 const onRegister = () => {

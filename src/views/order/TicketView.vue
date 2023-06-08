@@ -5,10 +5,10 @@
       <el-main style="margin: auto; border: 1px solid #979a9a; width: 90%;">
         <el-form label-width="70px" :inline="true">
           <el-form-item label="出发地" style="margin-bottom: 0">
-            <el-cascader :options='form.options' v-model='form.start' :show-all-levels="false" style="width: 200px;"></el-cascader>
+            <el-cascader :options='form.options' filterable v-model='form.start' :show-all-levels="false" style="width: 200px;"></el-cascader>
           </el-form-item>
           <el-form-item label="到达地" style="margin-bottom: 0">
-            <el-cascader :options='form.options' v-model='form.end' :show-all-levels="false" style="width: 200px;"></el-cascader>
+            <el-cascader :options='form.options' filterable v-model='form.end' :show-all-levels="false" style="width: 200px;"></el-cascader>
           </el-form-item>
           <el-form-item label="出发日期" style="margin-bottom: 0">
             <el-date-picker v-model="form.now" value-format="MM-DD" type="date" placeholder="选择出发日期" :disabled-date="disabledDate" style="width: 140px"/>

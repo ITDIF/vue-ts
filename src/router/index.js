@@ -18,12 +18,12 @@ const routes = [
   {
     path:'/user',
     name:'About',
-    component: () => import('../views/User.vue')
+    component: () => import('../views/user/User.vue')
   },
   {
     path:'/login',
     name:'login',
-    component: () => import('../views/LoginView.vue')
+    component: () => import('../views/user/LoginView.vue')
   },
   {
     path:'/test',
@@ -33,7 +33,7 @@ const routes = [
   {
     path:'/register',
     name:'register',
-    component: () => import('../views/RegisterView.vue')
+    component: () => import('../views/user/RegisterView.vue')
   },
   {
     path:'/t2',
@@ -43,7 +43,7 @@ const routes = [
   {
     path:'/ticket',
     name:'ticket',
-    component: () => import('../views/TicketView.vue')
+    component: () => import('../views/order/TicketView.vue')
   },
   {
     path:'/ticketShow',
@@ -53,18 +53,52 @@ const routes = [
   {
     path:'/order',
     name:'order',
-    component: () => import('../views/OrderView.vue')
+    component: () => import('../views/order/OrderView.vue')
   },
   {
     path:'/pay',
     name:'pay',
-    component: () => import('../views/PayView.vue')
+    component: () => import('../views/order/PayView.vue')
   },
-  ,
   {
     path:'/candidate',
     name:'CandidateView',
     component: () => import('../views/order/CandidateView.vue')
+  },
+  {
+    path:'/personalCenterView',
+    name:'PersonalCenterView',
+    component: () => import('../views/personalCenter/PersonalCenterView.vue')
+  },
+  {
+    path:'/busOrderView',
+    name:'BusOrderView',
+    component: () => import('../views/personalCenter/BusOrderView.vue')
+  },
+  {
+    path:'/candidatePayView',
+    name:'CandidatePayView',
+    component: () => import('../views/order/CandidatePayView.vue')
+  },
+  {
+    path:'/candidateOrderView',
+    name:'CandidateOrderView',
+    component: () => import('../views/personalCenter/CandidateOrderView.vue')
+  },
+  {
+    path:'/personalTicketView',
+    name:'PersonalTicketView',
+    component: () => import('../views/personalCenter/PersonalTicketView.vue')
+  },
+  {
+    path:'/personalInformationView',
+    name:'PersonalInformationView',
+    component: () => import('../views/personalCenter/PersonalInformationView.vue')
+  },
+  {
+    path:'/accountSecurityView',
+    name:'AccountSecurityView',
+    component: () => import('../views/personalCenter/AccountSecurityView.vue')
   },
 ]
 

@@ -20,8 +20,8 @@
         </el-form-item>
       </el-form>
 
-      <a href="#" style="float: left">立即注册</a>
-      <a href="#" style="float: right;">忘记密码</a>
+      <a style="float: left" @click="register">立即注册</a>
+      <a style="float: right;">忘记密码</a>
     </div>
   </div>
 </div>
@@ -86,6 +86,9 @@ const onSubmit = () => {
       })
     }
   })
+}
+const register = () => {
+  router.push('/register')
 }
 </script>
 

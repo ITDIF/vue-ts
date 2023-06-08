@@ -1,10 +1,10 @@
 <template>
   <div class="common-layout">
     <el-container>
-      <el-header>Header</el-header>
+<!--      <el-header>Header</el-header>-->
       <el-main style="width: 90%; margin: auto">
         <el-card class="card-header">
-          <el-text>座位已锁定，请在提示时间内尽快完成支付，完成网上购票。 支付剩余时间：
+          <el-text><el-icon size="large" color="blue"><Lock /></el-icon>  座位已锁定，请在提示时间内尽快完成支付，完成网上购票。 支付剩余时间：
             <b style="color: red">{{moment(countdown.time).format("mm")}}</b> 分
             <b style="color: red">{{moment(countdown.time).format("ss")}}</b> 秒
           </el-text>
@@ -104,6 +104,11 @@ onBeforeMount(()=>{
     if(countdown.time <= 0){
       countdown.time = 0
       clearInterval(timer)
+      ElMessage({
+        showClose: true,
+        message: '支付超时，订单已取消！',
+        type: 'error',
+      })
       window.history.back()
     }
   },1000)

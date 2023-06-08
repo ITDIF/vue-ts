@@ -8,6 +8,7 @@
 </template>
 <script lang="ts" setup>
 import {reactive, ref} from "vue";
+import moment from "moment";
 
 const date = reactive({
   day: ['1','2','3','4','5','6','7','8','9'],
@@ -17,5 +18,4 @@ const date = reactive({
 const tabClick = () =>{
   console.log('click: ',date)
 }
-
 </script>
