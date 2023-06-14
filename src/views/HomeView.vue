@@ -58,7 +58,7 @@ const submit = (formEl: FormInstance | undefined) => {
   //     codeToText[form.end[1]],form.date)
   formEl.validate((valid) => {
     if (valid) {
-      console.log('submit!')
+      // console.log('submit!')
       router.push({
         path: '/ticket',
         query:{

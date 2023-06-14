@@ -112,13 +112,15 @@ onBeforeMount(()=>{
       window.history.back()
     }
   },1000)
-
-  axios.get('http://localhost:8081/login/login',{
+  loadData()
+})
+async function loadData(){
+  await axios.get('http://localhost:8081/login/login',{
     params:{
       account: account
     }
   }).then((res)=>{
-    console.log(res.data)
+    console.log(111,res.data)
     res.data.seat_type = routeInfo.seat_type
     res.data.price = routeInfo.price+'元'
     orderInfo.user.push(res.data)
@@ -128,12 +130,13 @@ onBeforeMount(()=>{
       order_number: orderId
     }
   }).then((res)=>{
+    console.log(222,res.data)
     orderTime = res.data.order_time
     countdown.time -= moment().diff(moment(orderTime))
     orderInfo.user[0].seat_id = res.data.seat_id
     console.log('orderTimeDiffs',moment().diff(moment(orderTime)))
   })
-})
+}
 
 onUnmounted(()=>{
   clearInterval(timer)
