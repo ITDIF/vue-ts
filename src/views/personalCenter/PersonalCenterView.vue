@@ -57,6 +57,9 @@ const user = reactive({
   dt: moment().format('a')
 })
 onMounted(()=>{
+  if(store.state.account == '000'){
+
+  }
   axios.get('http://localhost:8081/login/gender',{
     params:{
       account: store.state.account

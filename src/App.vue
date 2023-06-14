@@ -60,6 +60,7 @@ const onRegister = () => {
             type: 'success',
             message: '成功退出',
           })
+          router.push('/')
         }).catch(() => {
           ElMessage({
             type: 'info',

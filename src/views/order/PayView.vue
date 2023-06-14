@@ -33,8 +33,8 @@
             <el-table-column prop="id_type" label="证件类型"/>
             <el-table-column prop="id_number" label="证件号码"/>
             <el-table-column prop="phone_number" label="电话号码"/>
-            <el-table-column prop="seat" label="席别"/>
-            <el-table-column prop="seat" label="座位号"/>
+            <el-table-column prop="seat_type" label="席别"/>
+            <el-table-column prop="seat_id" label="座位号"/>
             <el-table-column prop="price" label="票价(元)"/>
           </el-table>
         </el-card>
@@ -112,26 +112,26 @@ onBeforeMount(()=>{
       window.history.back()
     }
   },1000)
-})
-onMounted(() => {
+
   axios.get('http://localhost:8081/login/login',{
     params:{
       account: account
     }
   }).then((res)=>{
     console.log(res.data)
-    res.data.seat = routeInfo.seat_type
+    res.data.seat_type = routeInfo.seat_type
     res.data.price = routeInfo.price+'元'
     orderInfo.user.push(res.data)
   })
-  axios.get('http://localhost:8081/order/queryOrderTimeByOrderNumber',{
+  axios.get('http://localhost:8081/order/queryOrderTimeAndSeatByOrderNumber',{
     params:{
       order_number: orderId
     }
   }).then((res)=>{
-    orderTime = res.data
-    countdown.time -= moment().diff(moment(res.data))
-    console.log('orderTimeDiffs',moment().diff(moment(res.data)))
+    orderTime = res.data.order_time
+    countdown.time -= moment().diff(moment(orderTime))
+    orderInfo.user[0].seat_id = res.data.seat_id
+    console.log('orderTimeDiffs',moment().diff(moment(orderTime)))
   })
 })
 

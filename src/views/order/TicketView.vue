@@ -37,8 +37,8 @@
             <el-table-column prop="price" label="票价" />
             <el-table-column label="备注">
               <template #default="scope">
-                <el-button type="primary" :disabled="isClick(scope.row.remaining_tickets)" @click="submit(scope.row)">预订</el-button>
-                <el-button type="warning" :disabled="!isClick(scope.row.remaining_tickets)" @click="candidate(scope.row)">候补</el-button>
+                <el-button type="primary" :disabled="isClick(scope.row.remaining_tickets)" @click="submit(scope.row)" style="margin: auto">预订</el-button>
+                <el-button type="warning" :disabled="!isClick(scope.row.remaining_tickets)" @click="candidate(scope.row)" style="margin: auto">候补</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -69,13 +69,12 @@ const form = reactive({
   start: route.query.start,
   end: route.query.end,
   date: time,
-  days: [time],
+  days: [] as any,
   now: time?.slice(5),
   tableData: []
 })
 onBeforeMount(()=>{
   // console.log(route.query.start,route.query.end)
-  form.days.pop()
   for (let i = 0; i <= 10; i++) {
     form.days.push(moment().add(i, 'days').format("MM-DD"))
   }
@@ -86,10 +85,8 @@ onBeforeMount(()=>{
       date: moment().year()+"-"+form.now!.toString()
     }
   }).then((res)=>{
-    // console.log(res.data)
     form.tableData = res.data
     // ElMessage(res.data);
-
   })
 })
 //预订，候补按钮是否可以点击
@@ -125,7 +122,7 @@ interface routeInfo {
 //预订
 const submit = (row: routeInfo) => {
   // console.log(codeToText[form.start[0]],codeToText[form.start[1]],codeToText[form.end[0]],codeToText[form.end[1]])
-  console.log('submit:',row)
+  // console.log('submit:',row)
   if(store.state.account == '000'){
     router.push('/login')
     return
@@ -149,7 +146,7 @@ const submit = (row: routeInfo) => {
 }
 //候补
 const candidate = (row : routeInfo) =>{
-  console.log('candidate:',row)
+  // console.log('candidate:',row)
   if(store.state.account == '000'){
     router.push('/login')
     return
