@@ -179,19 +179,25 @@
             </el-card>
           </el-tab-pane>
           <el-tab-pane label="历史订单">
-            <div>
-              <span class="demonstration">乘车日期：</span>
-              <el-date-picker
-                  v-model="date"
-                  type="daterange"
-                  start-placeholder="开始时间"
-                  end-placeholder="结束时间"
-                  value-format="YYYY-MM-DD"
-                  style="width: 200px;"
-              />
-              <el-input style="width: 200px;" type="text"  placeholder="订单号/车次/姓名" />
-              <el-button type="primary" @click="dateClick">查询</el-button>
-            </div>
+            <el-row style="margin: 0 0 10px 0">
+              <el-col :span="10">
+                乘车日期
+                <el-date-picker
+                    v-model="date"
+                    type="daterange"
+                    start-placeholder="开始时间"
+                    end-placeholder="结束时间"
+                    value-format="YYYY-MM-DD"
+                    style="width: 200px;"
+                />
+              </el-col>
+              <el-col :span="7">
+                <el-input v-model="input" clearable  placeholder="订单号/车次/姓名" />
+              </el-col>
+              <el-col :span="3">
+                <el-button type="primary" @click="selClick">查询</el-button>
+              </el-col>
+            </el-row>
             <el-card>
               <template #header>
                 <el-row>
@@ -313,7 +319,10 @@ const cancelDate = ref()
 const total = ref(0)
 const currentPage = ref(1)
 const pageSize = ref(5)
+const selClicked = ref(false)
+const selUrl = ref()
 const date = ref()
+const input = ref()
 const userInfo = reactive({
   user: [] as any
 })
@@ -364,9 +373,22 @@ const tabChange = () =>{
     pageChange('http://localhost:8081/order/queryHistoricalOrderPaging')
   }
 }
-const dateClick = () => {
+//查询
+const selClick = () => {
   if(date.value == undefined) return
-  console.log(date.value[0],date.value[1])
+  console.log(date.value[0],date.value[1],input.value)
+  axios.get('http://localhost:8081/order/queryHistoricalOrderConditional',{
+    params:{
+      account: store.state.account,
+      startDate: date.value[0],
+      endDate: date.value[1],
+      key: input.value
+    }
+  }).then((res)=>{
+    // console.log(res.data)
+    userInfo.user = res.data
+    total.value = userInfo.user.length
+  })
 }
 //候补订单
 const tabOne = () => {
