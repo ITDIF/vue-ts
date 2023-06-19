@@ -65,7 +65,7 @@
                       {{e.to_station.slice(e.to_station.indexOf('市')+1)}} {{e.route_number}}
                     </el-text><br>
                     <el-text>{{moment(e.departure_time).format("YYYY-MM-DD")}}&nbsp;&nbsp;&nbsp;
-                      {{moment(e.departure_time).format("hh:mm")}} 开</el-text>
+                      {{moment(e.departure_time).format("HH:mm")}} 开</el-text>
                   </el-col>
                   <el-col :span="5">
                     <el-text tag="b">{{e.username}}</el-text><br>
@@ -129,7 +129,7 @@
                       {{e.to_station.slice(e.to_station.indexOf('市')+1)}} {{e.route_number}}
                     </el-text><br>
                     <el-text>{{moment(e.departure_time).format("YYYY-MM-DD")}}&nbsp;&nbsp;&nbsp;
-                      {{moment(e.departure_time).format("hh:mm")}} 开</el-text>
+                      {{moment(e.departure_time).format("HH:mm")}} 开</el-text>
                   </el-col>
                   <el-col :span="5">
                     <el-text tag="b">{{e.username}}</el-text><br>
@@ -224,7 +224,7 @@
                       {{e.to_station.slice(e.to_station.indexOf('市')+1)}} {{e.route_number}}
                     </el-text><br>
                     <el-text>{{moment(e.departure_time).format("YYYY-MM-DD")}}&nbsp;&nbsp;&nbsp;
-                      {{moment(e.departure_time).format("hh:mm")}} 开</el-text>
+                      {{moment(e.departure_time).format("HH:mm")}} 开</el-text>
                   </el-col>
                   <el-col :span="5">
                     <el-text tag="b">{{e.username}}</el-text><br>
@@ -392,7 +392,7 @@ const selClick = () => {
   selPageChange()
   // selUrl.value = 'http://localhost:8081/order/queryHistoricalOrderConditional'
 }
-//候补订单
+//待支付订单
 const tabOne = () => {
   axios.get('http://localhost:8081/order/queryOrderTemporaryByAccount',{
     params:{

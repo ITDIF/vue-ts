@@ -38,13 +38,13 @@
         </el-menu>
       </el-aside>
       <el-main>
-        <el-card shadow="never" style="width: 62%; margin: auto;">
+        <el-card shadow="never" style="width: 82%; margin: auto;">
           <template #header>
             密码修改
           </template>
           <el-form
 
-
+              style="width: 62%; margin: auto;"
               label-width="80px"
           >
             <el-form-item label="原密码" prop="">

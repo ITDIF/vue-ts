@@ -38,30 +38,36 @@
         </el-menu>
       </el-aside>
       <el-main>
-        <el-card shadow="never" style="width: 90%;">
-          <el-row style="margin: auto;">
-            <el-col :span="4" style="margin: auto">
-              <el-text size="large" tag="b"><el-icon size="large" color="#3b99fc"><Lock /></el-icon> 登录密码</el-text>
-            </el-col>
-            <el-col :span="16" style="margin: auto"><el-text>建议您定期更改密码以保护账户安全</el-text></el-col>
-            <el-col :span="4" style="margin: auto"><el-button @click="dialogVisible=true">修改</el-button></el-col>
-          </el-row>
-          <el-divider/>
-          <el-row style="margin: auto;">
-            <el-col :span="4" style="margin: auto">
-              <el-text size="large" tag="b"><el-icon size="large" color="#3b99fc"><Iphone /></el-icon> 手机核验</el-text>
-            </el-col>
-            <el-col :span="16" style="margin: auto"><el-text>使用手机接收相关服务信息</el-text></el-col>
-            <el-col :span="4" style="margin: auto"><el-button>修改</el-button></el-col>
-          </el-row>
-          <el-divider/>
-          <el-row style="margin: auto;">
-            <el-col :span="4" style="margin: auto">
-              <el-text size="large" tag="b"><el-icon size="large" color="#3b99fc"><Message /></el-icon> 安全邮箱</el-text>
-            </el-col>
-            <el-col :span="16" style="margin: auto"><el-text>使用邮箱接收相关服务信息</el-text></el-col>
-            <el-col :span="4" style="margin: auto"><el-button>修改</el-button></el-col>
-          </el-row>
+        <el-card shadow="never" style="width: 82%; margin: auto;">
+          <template #header>
+            密码修改
+          </template>
+          <el-form
+
+              style="width: 62%; margin: auto;"
+              label-width="80px"
+          >
+            <el-form-item label="原密码" prop="">
+              <el-input clearable style="width: 200px;"/>
+              <el-text>&nbsp;请输入原始密码</el-text>
+            </el-form-item>
+            <el-form-item label="新密码" prop="">
+              <el-input clearable style="width: 200px;"/>
+              <el-text>&nbsp;6-20字母、数字或下划线</el-text>
+            </el-form-item>
+            <el-form-item label="密码确认" prop="">
+              <el-input clearable style="width: 200px;"/>
+              <el-text>&nbsp;请再次输入密码</el-text>
+            </el-form-item>
+            <el-form-item label="验证码" prop="">
+              <el-input clearable placeholder="请填写手机验证码" style="width: 200px;"/>&nbsp;&nbsp;
+              <el-button type="primary">获取手机验证码</el-button>
+            </el-form-item>
+            <el-form-item>
+              <el-button>取消</el-button>
+              <el-button type="primary">确认</el-button>
+            </el-form-item>
+          </el-form>
         </el-card>
       </el-main>
     </el-container>

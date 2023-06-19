@@ -44,7 +44,7 @@
               <el-text size="large" tag="b"><el-icon size="large" color="#3b99fc"><Lock /></el-icon> 登录密码</el-text>
             </el-col>
             <el-col :span="16" style="margin: auto"><el-text>建议您定期更改密码以保护账户安全</el-text></el-col>
-            <el-col :span="4" style="margin: auto"><el-button @click="">修改</el-button></el-col>
+            <el-col :span="4" style="margin: auto"><el-button @click="modify('/changePasswordView')">修改</el-button></el-col>
           </el-row>
           <el-divider/>
           <el-row style="margin: auto;">
@@ -52,7 +52,7 @@
               <el-text size="large" tag="b"><el-icon size="large" color="#3b99fc"><Iphone /></el-icon> 手机核验</el-text>
             </el-col>
             <el-col :span="16" style="margin: auto"><el-text>使用手机接收相关服务信息</el-text></el-col>
-            <el-col :span="4" style="margin: auto"><el-button>修改</el-button></el-col>
+            <el-col :span="4" style="margin: auto"><el-button @click="modify('/changePhoneView')">修改</el-button></el-col>
           </el-row>
           <el-divider/>
           <el-row style="margin: auto;">
@@ -60,7 +60,7 @@
               <el-text size="large" tag="b"><el-icon size="large" color="#3b99fc"><Message /></el-icon> 安全邮箱</el-text>
             </el-col>
             <el-col :span="16" style="margin: auto"><el-text>使用邮箱接收相关服务信息</el-text></el-col>
-            <el-col :span="4" style="margin: auto"><el-button>修改</el-button></el-col>
+            <el-col :span="4" style="margin: auto"><el-button @click="modify('/changeEmailView')">修改</el-button></el-col>
           </el-row>
         </el-card>
       </el-main>
@@ -91,7 +91,7 @@ onMounted(()=>{
   })
 })
 const modify = (link: string) => {
-
+  router.push(link)
 }
 const handleSelect = (key: string, keyPath: string[]) => {
   console.log(key)
