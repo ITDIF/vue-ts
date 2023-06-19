@@ -115,7 +115,7 @@ const submitForm = (formEl: FormInstance | undefined) => {
   formEl.validate((valid) => {
     if (valid) {
       let data = JSON.stringify(ruleForm)
-      axios.get('http://localhost:8081/register/add',{
+      axios.get('http://localhost:8081/register/addUser',{
         params:{
           // account: ruleForm.account,
           // password: ruleForm.password,
@@ -167,7 +167,7 @@ const rules = reactive<FormRules>({
   ],
   phone_number:[
     { required: true, message: '请输入手机号码', trigger: 'blur'},
-    { len: 11, message: '手机号码格式错误', trigger: 'blur'}
+    { len: 11, pattern: /^1[3-9]\d{9}$/, message: '手机号码格式错误', trigger: 'blur'}
   ]
 })
 

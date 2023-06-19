@@ -11,7 +11,7 @@
       />
 
     </div>
-    <el-button @click="click">查询</el-button>
+    <el-button @click="clicked">查询</el-button>
   </div>
 
 </template>
@@ -33,7 +33,7 @@ const click = () => {
   if(value1.value == undefined) return
   console.log(value1.value[0],value1.value[1])
 }
-
+const clicked = ref(click)
 
 </script>
 

@@ -100,6 +100,21 @@ const routes = [
     name:'AccountSecurityView',
     component: () => import('../views/personalCenter/AccountSecurityView.vue')
   },
+  {
+    path:'/changeEmailView',
+    name:'ChangeEmailView',
+    component: () => import('../views/personalCenter/security/ChangeEmailView.vue')
+  },
+  {
+    path:'/changePasswordView',
+    name:'ChangePasswordView',
+    component: () => import('../views/personalCenter/security/ChangePasswordView.vue')
+  },
+  {
+    path:'/changePhoneView',
+    name:'ChangePhoneView',
+    component: () => import('../views/personalCenter/security/ChangePhoneView.vue')
+  },
 ]
 
 const router = createRouter({

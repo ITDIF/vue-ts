@@ -69,7 +69,7 @@
                   </el-col>
                   <el-col :span="5">
                     <el-text tag="b">{{e.username}}</el-text><br>
-                    <el-text tag="b">{{e.id_number}}</el-text>
+                    <el-text tag="b">{{e.id_number.slice(0,3)}}*****{{e.id_number.slice(15)}}</el-text>
                   </el-col>
                   <el-col :span="4">
                     <el-text tag="b">{{e.seat_type}}</el-text><br>
@@ -133,7 +133,7 @@
                   </el-col>
                   <el-col :span="5">
                     <el-text tag="b">{{e.username}}</el-text><br>
-                    <el-text tag="b">{{e.id_number}}</el-text>
+                    <el-text tag="b">{{e.id_number.slice(0,3)}}*****{{e.id_number.slice(15)}}</el-text>
                   </el-col>
                   <el-col :span="4">
                     <el-text tag="b">{{e.seat_type}}</el-text><br>
@@ -171,14 +171,14 @@
                       layout="prev, pager, next, total"
                       :total="total"
                       :page-size="pageSize"
-                      @click="pageChange('http://localhost:8081/order/queryNotTravelOrderByPaging')"
+                      @click="pageFunction"
                       hide-on-single-page
                   />
                 </el-col>
               </el-row>
             </el-card>
           </el-tab-pane>
-          <el-tab-pane label="历史订单">
+          <el-tab-pane label="全部订单">
             <el-row style="margin: 0 0 10px 0">
               <el-col :span="10">
                 乘车日期
@@ -228,7 +228,7 @@
                   </el-col>
                   <el-col :span="5">
                     <el-text tag="b">{{e.username}}</el-text><br>
-                    <el-text tag="b">{{e.id_number}}</el-text>
+                    <el-text tag="b">{{e.id_number.slice(0,3)}}*****{{e.id_number.slice(15)}}</el-text>
                   </el-col>
                   <el-col :span="4">
                     <el-text tag="b">{{e.seat_type}}</el-text><br>
@@ -251,7 +251,7 @@
                       layout="prev, pager, next, total"
                       :total="total"
                       :page-size="pageSize"
-                      @click="pageChange('http://localhost:8081/order/queryHistoricalOrderPaging')"
+                      @click="pageFunction"
                       hide-on-single-page
                   />
                 </el-col>
@@ -321,8 +321,9 @@ const currentPage = ref(1)
 const pageSize = ref(5)
 const selClicked = ref(false)
 const selUrl = ref()
+const conUrl = ref()
 const date = ref()
-const input = ref()
+const input = ref('')
 const userInfo = reactive({
   user: [] as any
 })
@@ -348,8 +349,9 @@ const cancelOrder = (url: string) => {
       if(tabName.value == '0'){
         tabOne()
       }else if(tabName.value == '1'){
+        selUrl.value = 'http://localhost:8081/order/queryNotTravelOrderByPaging'
         pageCount('http://localhost:8081/order/queryNotTravelOrderCount')
-        pageChange('http://localhost:8081/order/queryNotTravelOrderByPaging')
+        pageChange()
       }
     }else{
       ElMessage({
@@ -363,32 +365,32 @@ const cancelOrder = (url: string) => {
 //标签改变
 const tabChange = () =>{
   // console.log('tab' , tabName.value)
+  currentPage.value = 1
+  selClicked.value = false
+  pageFunction.value = pageChange
   if(tabName.value == '0'){
     tabOne()
   }else if(tabName.value == '1'){
+    selUrl.value = 'http://localhost:8081/order/queryNotTravelOrderByPaging'
     pageCount('http://localhost:8081/order/queryNotTravelOrderCount')
-    pageChange('http://localhost:8081/order/queryNotTravelOrderByPaging')
+    pageChange()
   }else{
+    selUrl.value = 'http://localhost:8081/order/queryHistoricalOrderPaging'
     pageCount('http://localhost:8081/order/queryHistoricalOrderCount')
-    pageChange('http://localhost:8081/order/queryHistoricalOrderPaging')
+    pageChange()
   }
 }
 //查询
 const selClick = () => {
   if(date.value == undefined) return
-  console.log(date.value[0],date.value[1],input.value)
-  axios.get('http://localhost:8081/order/queryHistoricalOrderConditional',{
-    params:{
-      account: store.state.account,
-      startDate: date.value[0],
-      endDate: date.value[1],
-      key: input.value
-    }
-  }).then((res)=>{
-    // console.log(res.data)
-    userInfo.user = res.data
-    total.value = userInfo.user.length
-  })
+  selClicked.value = true
+  currentPage.value = 1
+  // console.log(date.value[0],moment(date.value[1]).add(1,'days').format("YYYY-MM-DD"),input.value)
+  conUrl.value = 'http://localhost:8081/order/queryHistoricalOrderConditional'
+  selPageCount('http://localhost:8081/order/queryHistoricalOrderConditionalCount')
+  pageFunction.value = selPageChange
+  selPageChange()
+  // selUrl.value = 'http://localhost:8081/order/queryHistoricalOrderConditional'
 }
 //候补订单
 const tabOne = () => {
@@ -408,13 +410,45 @@ const pageCount = (url: string) => {
       account: store.state.account,
     }
   }).then((res)=>{
-    console.log(res.data)
+    // console.log(res.data)
     total.value = res.data
   })
 }
-//分页
-const pageChange = (url: string) =>{
+//条件订单数量
+const selPageCount = (url: string) => {
   axios.get(url,{
+    params:{
+      account: store.state.account,
+      startDate: date.value[0],
+      endDate: moment(date.value[1]).add(1,'days').format("YYYY-MM-DD"),
+      key: input.value
+    }
+  }).then((res)=>{
+    // console.log(res.data)
+    total.value = res.data
+  })
+}
+//
+const selPageChange = () => {
+  // console.log('selPageChange')
+  axios.get(conUrl.value,{
+    params:{
+      account: store.state.account,
+      startDate: date.value[0],
+      endDate: moment(date.value[1]).add(1,'days').format("YYYY-MM-DD"),
+      key: input.value,
+      start: (currentPage.value - 1) * pageSize.value,
+      count: pageSize.value
+    }
+  }).then((res)=>{
+    // console.log(res.data)
+    userInfo.user = res.data
+  })
+}
+//分页
+const pageChange = () =>{
+  // console.log('第 ',currentPage.value,'页')
+  axios.get(selUrl.value,{
     params:{
       account: store.state.account,
       start: (currentPage.value - 1) * pageSize.value,
@@ -454,6 +488,7 @@ const onlinePayment = (orderNumber: string) => {
 const handleSelect = (key: string, keyPath: string[]) => {
   console.log(key)
 }
+const pageFunction = ref(pageChange as any)
 </script>
 
 <style scoped>

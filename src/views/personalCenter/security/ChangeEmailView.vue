@@ -44,7 +44,7 @@
               <el-text size="large" tag="b"><el-icon size="large" color="#3b99fc"><Lock /></el-icon> 登录密码</el-text>
             </el-col>
             <el-col :span="16" style="margin: auto"><el-text>建议您定期更改密码以保护账户安全</el-text></el-col>
-            <el-col :span="4" style="margin: auto"><el-button @click="">修改</el-button></el-col>
+            <el-col :span="4" style="margin: auto"><el-button @click="dialogVisible=true">修改</el-button></el-col>
           </el-row>
           <el-divider/>
           <el-row style="margin: auto;">
@@ -73,7 +73,6 @@ import {useStore} from "vuex";
 import {onMounted, reactive, ref} from "vue";
 import axios from "axios";
 import moment from "moment";
-import router from "@/router";
 const store = useStore()
 const user = reactive({
   gender: '先生',
@@ -90,9 +89,6 @@ onMounted(()=>{
     }
   })
 })
-const modify = (link: string) => {
-
-}
 const handleSelect = (key: string, keyPath: string[]) => {
   console.log(key)
   // router.push(store.state.route[key])
