@@ -91,11 +91,15 @@
                         type="info"
                         style="width: 80px;margin-right: 20px"
                         @click="dialogVisible = true;
-                        cancelOrderNumber = e.order_number;
+                        currentOrderNumber = e.order_number;
                         cancelDate = e.departure_time"
                     >取消订单</el-button>
                     <el-button
                         type="warning"
+                        @click="dialogVisible3 = true;
+                        queryDeadline(e.order_number);
+                        currentOrderNumber = e.order_number;
+                        selDeadline(e.departure_time)"
                     >修改截止兑换时间</el-button>
                     <el-button
                         type="warning"
@@ -156,7 +160,7 @@
                         type="info"
                         style="width: 80px;margin-right: 20px"
                         @click="dialogVisible2 = true;
-                        cancelOrderNumber = e.order_number;
+                        currentOrderNumber = e.order_number;
                         cancelDate = e.departure_time"
                     >取消</el-button>
                     <el-button
@@ -292,12 +296,12 @@
   </el-dialog>
   <el-dialog
       v-model="dialogVisible2"
-      title="退票"
+      title="订单取消"
       width="30%"
       center
       align-center
   >
-    <span>确定要退票吗？</span>
+    <span>确定要取消候补订单吗？</span>
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="dialogVisible2 = false">取消</el-button>
@@ -310,6 +314,38 @@
       </span>
     </template>
   </el-dialog>
+  <el-dialog
+      v-model="dialogVisible3"
+      title="提示"
+      width="34%"
+      center
+      align-center
+  >
+    <el-text tag="b"><el-icon><InfoFilled /></el-icon>截止兑现时间提示</el-text><br>
+    <el-text>到期后如未能兑现车票，将自动返还票款至付款账号。</el-text><br>
+    <el-text>截止兑换时间：
+      <el-select v-model="selectValue" placeholder="请选择" style="width: 150px">
+        <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+            :disabled="item.disabled"
+        />
+      </el-select>
+    </el-text>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="dialogVisible3 = false">取消</el-button>
+        <el-button
+            type="primary"
+            @click="dialogVisible3 = false;
+            changeDeadline()">
+          确定
+        </el-button>
+      </span>
+    </template>
+  </el-dialog>
 </template>
 
 <script lang="ts" setup>
@@ -317,12 +353,12 @@ import {useStore} from "vuex";
 import {onBeforeMount, onMounted, reactive, ref} from "vue";
 import axios from "axios";
 import moment from "moment";
-import router from "@/router";
 import {ElMessage} from "element-plus";
 const tabName = ref('0')
 const dialogVisible = ref(false)
 const dialogVisible2 = ref(false)
-const cancelOrderNumber = ref()
+const dialogVisible3 = ref(false)
+const currentOrderNumber = ref()
 const cancelDate = ref()
 const total = ref(0)
 const currentPage = ref(1)
@@ -332,6 +368,9 @@ const selUrl = ref()
 const conUrl = ref()
 const date = ref()
 const input = ref('')
+const selectValue = ref('')
+const options = []
+const deadline = ref('')
 const userInfo = reactive({
   user: [] as any
 })
@@ -341,10 +380,10 @@ onBeforeMount(()=>{
   tabOne()
 })
 const cancelOrder = (url: string) => {
-  console.log('取消订单！',cancelOrderNumber.value,url)
+  console.log('取消订单！',currentOrderNumber.value,url)
   axios.get(url,{
     params:{
-      order_number: cancelOrderNumber.value,
+      order_number: currentOrderNumber.value,
     }
   }).then((res)=>{
     if(res.data == '1'){
@@ -481,11 +520,68 @@ const onlinePayment = (orderNumber: string) => {
         message: '支付成功！',
         type: 'success',
       })
-      window.history.back()
+      tabOne()
     }else{
       ElMessage({
         showClose: true,
         message: '支付失败，请重新尝试！',
+        type: 'error',
+      })
+    }
+  })
+}
+const queryDeadline = (orderNumber: String) => {
+  axios.get('http://localhost:8081/candidate/queryDeadlineOrderNumber',{
+    params:{
+      orderNumber: orderNumber
+    }
+  }).then((res)=>{
+    // console.log('deadline',res.data)
+    deadline.value = res.data
+    selectValue.value = deadline.value
+  })
+}
+const selDeadline = (date: string) => {
+  let h = moment(date).diff(moment())/1000/3600
+  let t = 2
+  while(t < h){
+    if(t < 24){
+      options.push({value: t,label: '开车前'+t+'小时'})
+    }else{
+      options.push({value: t,label: '开车前'+t/24+'天'})
+    }
+    if(t == 2){
+      t = 3;
+    }else if(t == 3){
+      t = 6;
+    }else if(t == 6){
+      t = 12;
+    }else if(t == 12){
+      t = 24;
+    }else{
+      t += 24;
+    }
+  }
+}
+const changeDeadline = () => {
+  axios.get('http://localhost:8081/candidate/updateCandidateDeadline',{
+    params:{
+      orderNumber: currentOrderNumber.value,
+      deadline: selectValue.value
+    }
+  }).then((res)=>{
+    console.log(res.data)
+    if(res.data == '1'){
+      ElMessage({
+        showClose: true,
+        message: '修改成功！',
+        type: 'success',
+      })
+      tabOne()
+    }else{
+      ElMessage({
+        showClose: true,
+        message: '修改失败，请重新尝试！',
         type: 'error',
       })
     }

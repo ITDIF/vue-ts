@@ -64,7 +64,7 @@
               <el-button type="primary">获取手机验证码</el-button>
             </el-form-item>
             <el-form-item>
-              <el-button>取消</el-button>
+              <el-button @click="cancel">取消</el-button>
               <el-button type="primary">确认</el-button>
             </el-form-item>
           </el-form>
@@ -79,6 +79,7 @@ import {useStore} from "vuex";
 import {onMounted, reactive, ref} from "vue";
 import axios from "axios";
 import moment from "moment";
+import router from "@/router";
 const store = useStore()
 const user = reactive({
   gender: '先生',
@@ -95,6 +96,9 @@ onMounted(()=>{
     }
   })
 })
+const cancel = () => {
+  router.push('/accountSecurityView')
+}
 const handleSelect = (key: string, keyPath: string[]) => {
   console.log(key)
   // router.push(store.state.route[key])

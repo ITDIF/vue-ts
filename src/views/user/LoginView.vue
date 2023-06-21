@@ -60,28 +60,28 @@ const onSubmit = () => {
       password: form.password
     }
   }).then((res)=>{
-    console.log(res.data)
-    if(res.data=='登录成功!'){
+    // console.log(res.data)
+    if(res.data.code == 1){
       ElMessage({
         showClose: true,
-        message: res.data,
+        message: '登录成功!',
         type: 'success',
       })
-      store.commit('changeAccount',form.account)
-      axios.get('http://localhost:8081/login/username',{
-        params:{
-          account: form.account
-        }
-      }).then((res)=>{
-        store.commit('changeUsername',res.data)
-        store.commit('changeLogin',res.data)
-        store.commit('changeRegister','退出')
-      })
+      store.commit('changeAccount',res.data.account)
+      store.commit('changeUsername',res.data.username)
+      store.commit('changeLogin',res.data.username)
+      store.commit('changeRegister','退出')
       window.history.back()
-    }else {
+    }else if(res.data.code == -1){
       ElMessage({
         showClose: true,
-        message: res.data,
+        message: '密码错误！',
+        type: 'error',
+      })
+    }else{
+      ElMessage({
+        showClose: true,
+        message: '账户不存在！',
         type: 'error',
       })
     }
