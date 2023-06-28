@@ -115,6 +115,15 @@ const getPhoneCode = () => {
         message: "验证码已发送！",
         type: "success"
       })
+      timer = setInterval(() => {
+        time.value -= 1000
+        console.log(moment(time.value).format("mm:ss"))
+        if(time.value <= 0){
+          clearInterval(timer)
+          time.value = 60000
+          disabled.value = false
+        }
+      },1000)
     }else{
       ElMessage({
         message: "验证码发送失败，请重试！",
@@ -122,15 +131,7 @@ const getPhoneCode = () => {
       })
     }
   })
-  timer = setInterval(() => {
-    time.value -= 1000
-    console.log(moment(time.value).format("mm:ss"))
-    if(time.value <= 0){
-      clearInterval(timer)
-      time.value = 60000
-      disabled.value = false
-    }
-  },1000)
+
 }
 const cancel = () => {
   router.push('/accountSecurityView')

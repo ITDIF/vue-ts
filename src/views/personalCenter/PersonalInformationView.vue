@@ -84,13 +84,15 @@
         label-width="100px"
     >
       <el-form-item label="手机号" prop="phone_number">
-        <el-input v-model="contact.phone_number" clearable />
+        <el-input disabled v-model="contact.phone_number" style="width: 60%;" />&nbsp;
+        <el-text>去 <el-link href="#/changePhoneView" :underline="false" type="warning">手机核验</el-link> 修改</el-text>
       </el-form-item>
       <el-form-item label="邮箱" prop="email">
-        <el-input v-model="contact.email" clearable />
+        <el-input disabled v-model="contact.email"  style="width: 60%;" />&nbsp;
+        <el-text>去 <el-link  href="#/changeEmailView" :underline="false" type="warning">安全邮箱</el-link> 修改</el-text>
       </el-form-item>
       <el-form-item label="地址" prop="district">
-        <el-input v-model="contact.district" clearable />
+        <el-input v-model="contact.district"  style="width: 60%;" clearable />
       </el-form-item>
     </el-form>
     <template #footer>
@@ -128,7 +130,7 @@ onMounted(()=>{
       account: store.state.account
     }
   }).then((res)=>{
-    // console.log(res.data)
+    console.log(store.state.account,res.data)
     user.info = res.data
   })
 })

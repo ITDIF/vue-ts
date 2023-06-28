@@ -481,6 +481,7 @@ const onlinePayment = (orderNumber: string) => {
         message: '支付失败，请重新尝试！',
         type: 'error',
       })
+      tabOne()
     }
   })
 }
