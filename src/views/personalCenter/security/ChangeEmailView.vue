@@ -50,20 +50,20 @@
               label-width="100px"
           >
             <el-form-item label="原电子邮箱" prop="email">
-              <el-input :disabled="true" v-model="user.phone" style="width: 200px;"/>
+              <el-input :disabled="true" v-model="user.email" style="width: 200px;"/>
             </el-form-item>
             <el-form-item label="新电子邮箱" prop="newEmail">
               <el-input v-model="user.newEmail" clearable style="width: 200px;"/>
               <el-text>&nbsp;请输入新电子邮箱</el-text>
             </el-form-item>
             <el-form-item label="登录密码" prop="password">
-              <el-input v-model="user.password" clearable style="width: 200px;"/>
+              <el-input type="password" v-model="user.password" clearable style="width: 200px;"/>
               <el-text>&nbsp;正确输入密码才能修改</el-text>
             </el-form-item>
             <el-form-item label="验证码" prop="code">
               <el-input v-model="user.code" clearable placeholder="请填写邮箱验证码" style="width: 200px;"/>&nbsp;&nbsp;
               <el-button
-                  @click="getPhoneCode"
+                  @click="getMailCode"
                   :disabled="disabled"
                   type="primary"
               >
@@ -73,7 +73,7 @@
             </el-form-item>
             <el-form-item>
               <el-button @click="cancel">取消</el-button>
-              <el-button type="primary">确认</el-button>
+              <el-button type="primary" @click="submit(ruleFormRef)">确认</el-button>
             </el-form-item>
           </el-form>
         </el-card>
@@ -84,13 +84,13 @@
 
 <script lang="ts" setup>
 import {useStore} from "vuex";
-import {onMounted, reactive, ref} from "vue";
+import {onMounted, reactive, ref, watch} from "vue";
 import axios from "axios";
 import moment from "moment";
 import router from "@/router";
 import {ElMessage, FormInstance, FormRules} from "element-plus";
 const store = useStore()
-const disabled = ref(false)
+const disabled = ref(true)
 const ruleFormRef = ref<FormInstance>()
 const codeButtonText = ref('获取邮箱验证码')
 const time = ref(60000)
@@ -101,13 +101,30 @@ const user = reactive({
   code: '',
   password: '',
 })
-
-const getPhoneCode = () => {
-  disabled.value = true
-  codeButtonText.value = '重新发送'
-  axios.get('http://localhost:8081/user/phoneCode',{
+onMounted(()=>{
+  axios.get('http://localhost:8081/user/userMail',{
     params:{
       account: store.state.account
+    }
+  }).then((res)=>{
+    // console.log('email',res.data)
+    user.email = res.data
+  })
+})
+watch(()=>user.newEmail,(value, oldValue)=>{
+  let regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+  if(regex.test(user.newEmail)){
+    disabled.value = false
+  }else{
+    disabled.value = true
+  }
+})
+const getMailCode = () => {
+  disabled.value = true
+  codeButtonText.value = '重新发送'
+  axios.get('http://localhost:8081/user/mailCode',{
+    params:{
+      email: user.newEmail
     }
   }).then((res)=>{
     if(res.data == 1){
@@ -115,6 +132,15 @@ const getPhoneCode = () => {
         message: "验证码已发送！",
         type: "success"
       })
+      timer = setInterval(() => {
+        time.value -= 1000
+        console.log(moment(time.value).format("mm:ss"))
+        if(time.value <= 0){
+          clearInterval(timer)
+          time.value = 60000
+          disabled.value = false
+        }
+      },1000)
     }else{
       ElMessage({
         message: "验证码发送失败，请重试！",
@@ -122,31 +148,82 @@ const getPhoneCode = () => {
       })
     }
   })
-  timer = setInterval(() => {
-    time.value -= 1000
-    console.log(moment(time.value).format("mm:ss"))
-    if(time.value <= 0){
-      clearInterval(timer)
-      time.value = 60000
-      disabled.value = false
-    }
-  },1000)
 }
 const cancel = () => {
   router.push('/accountSecurityView')
 }
+const submit = (formEl: FormInstance | undefined) => {
+  if (!formEl) return
+  formEl.validate((valid) => {
+    if (valid) {
+      axios.get('http://localhost:8081/user/checkMailCodeAndUpdateUser',{
+        params:{
+          code: user.code,
+          data: JSON.stringify({account: store.state.account, email: user.newEmail})
+        }
+      }).then((res)=>{
+        if(res.data == 1){
+          ElMessage({
+            message: "电子邮箱修改成功！",
+            type: "success"
+          })
+          clearInterval(timer)
+          router.push('/accountSecurityView')
+        }else if(res.data == 0){
+          ElMessage({
+            message: "修改失败，请重试！",
+            type: "error"
+          })
+        }else if(res.data == -1){
+          ElMessage({
+            message: "验证码错误，请重试！",
+            type: "error"
+          })
+        }else if(res.data == -2){
+          ElMessage({
+            message: "验证码过期，请重新获取验证码",
+            type: "error"
+          })
+        }
+      })
+    } else {
+      console.log('提交失败!')
+      return false
+    }
+  })
+}
+const validatePassword = (rule: any, value: any, callback: any) => {
+  if(value == ''){
+    callback()
+  }else{
+    axios.get('http://localhost:8081/user/checkPass',{
+      params:{
+        account: store.state.account,
+        password: user.password
+      }
+    }).then((res)=>{
+      // console.log('pass ',res.data)
+      if(!res.data){
+        console.log('密码错误')
+        callback(new Error('密码错误！'))
+      }else{
+        callback()
+      }
+    })
+  }
+}
 const rules = reactive<FormRules>({
-  phone:[
-    { required: true, message: '请输入原始密码', trigger: 'change'},
-    { len: 11, pattern: /^1[3-9]\d{9}$/, message: '手机号码格式错误', trigger: 'blur'}
+  email:[
+    { required: true, message: '请输入原电子邮箱', trigger: 'change'},
+    { pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, message: '电子邮箱格式错误', trigger: 'blur'}
   ],
-  newPhone:[
-    { required: true, message: '请输入原始密码', trigger: 'change'},
-    { len: 11, pattern: /^1[3-9]\d{9}$/, message: '手机号码格式错误', trigger: 'blur'}
+  newEmail:[
+    { required: true, message: '请输入新电子邮箱', trigger: 'change'},
+    { pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, message: '电子邮箱格式错误', trigger: 'blur'}
   ],
   password:[
-    { required: true, message: '请输入新密码', trigger: 'change'},
-    { len: 6, pattern: /^\w{6,20}$/, message: '6-20字母、数字或下划线', trigger: 'blur'}
+    { required: true, message: '请输入密码', trigger: 'change'},
+    { validator: validatePassword, trigger: 'blur'}
   ],
   code:[
     { required: true, message: '请输入验证码', trigger: 'change'}

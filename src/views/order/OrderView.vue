@@ -1,7 +1,7 @@
 <template>
   <div class="common-layout">
     <el-container>
-      <el-header>Header</el-header>
+      <el-header></el-header>
       <el-main style="width: 90%; margin: auto">
         <el-card style="margin-bottom: 10px">
           <template #header>
@@ -45,7 +45,7 @@
         >上一步</el-button>
         <el-button type="warning" style="width: 100px" @click="dialogVisible = true">提交订单</el-button>
       </el-main>
-      <el-footer>Footer</el-footer>
+      <el-footer></el-footer>
     </el-container>
   </div>
   <el-dialog

@@ -161,8 +161,7 @@ const submit = (formEl: FormInstance | undefined) => {
       axios.get('http://localhost:8081/user/checkCodeAndUpdateUser',{
         params:{
           code: user.code,
-          data: JSON.stringify({account: store.state.account,
-            password: user.password, phone_number: user.newPhone})
+          data: JSON.stringify({account: store.state.account, phone_number: user.newPhone})
         }
       }).then((res)=>{
         if(res.data == 1){

@@ -1,10 +1,9 @@
 <template>
   <nav>
     <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link> |
-    <router-link to="/user">User</router-link> |
-    <router-link to="/t2">t222</router-link> |
-    <router-link to="/test">test</router-link> |
+<!--    <router-link to="/about">About</router-link> |-->
+<!--    <router-link to="/t2">t222</router-link> |-->
+<!--    <router-link to="/test">test</router-link> |-->
   </nav>
   <el-container>
     <el-header style="background-color: #F8F8F8;width: 90%;height: 40px;line-height: 40px;margin: auto">

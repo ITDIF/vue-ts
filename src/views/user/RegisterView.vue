@@ -133,7 +133,7 @@ const submitForm = (formEl: FormInstance | undefined) => {
             message: "注册成功！",
             type: "success"
           })
-          router.push('/login');
+          router.push('/');
         }else{
           ElMessage.error("注册失败！")
         }

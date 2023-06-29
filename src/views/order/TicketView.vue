@@ -1,7 +1,7 @@
 <template>
   <div class="common-layout">
     <el-container>
-      <el-header>Header</el-header>
+      <el-header></el-header>
       <el-main style="margin: auto; border: 1px solid #979a9a; width: 90%;">
         <el-form label-width="70px" :inline="true">
           <el-form-item label="出发地" style="margin-bottom: 0">
@@ -44,7 +44,7 @@
           </el-table>
         </el-tabs>
       </el-main>
-      <el-footer>Footer</el-footer>
+      <el-footer></el-footer>
     </el-container>
   </div>
 </template>
