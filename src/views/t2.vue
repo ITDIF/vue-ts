@@ -34,7 +34,7 @@ const click = () => {
   console.log(value1.value[0],value1.value[1])
 }
 const clicked = ref(click)
-
+console.log('op: ',route.params.op)
 </script>
 
 <style scoped>

@@ -1,10 +1,11 @@
 <template>
   <div class="common-layout">
     <el-container>
-<!--      <el-header>Header</el-header>-->
+      <!--      <el-header>Header</el-header>-->
       <el-main style="width: 90%; margin: auto">
         <el-card class="card-header">
-          <el-text><el-icon size="large" color="blue"><Lock /></el-icon>  座位已锁定，请在提示时间内尽快完成支付，完成网上购票。 支付剩余时间：
+          <el-text><el-icon size="large" color="blue"><Lock /></el-icon>
+            座位已锁定，<el-text style="color: red">改签交易尚未完成，</el-text>请在提示时间内尽快完成支付。 支付剩余时间：
             <b style="color: red">{{moment(countdown.time).format("mm")}}</b> 分
             <b style="color: red">{{moment(countdown.time).format("ss")}}</b> 秒
           </el-text>
@@ -72,22 +73,22 @@
 </template>
 
 <script lang="ts" setup>
-import {onBeforeMount, onMounted, onUnmounted, reactive, ref} from "vue";
+import {onBeforeMount, onBeforeUnmount, onMounted, onUnmounted, reactive, ref} from "vue";
 import type { FormInstance, FormRules } from 'element-plus'
 import {useRoute, useRouter} from "vue-router";
 import moment from "moment";
 import axios from "axios";
 import {ElMessage, ElMessageBox} from "element-plus";
+import {useStore} from "vuex";
 const route = useRoute()
 const router = useRouter()
 const formRef = ref<FormInstance>()
 const routeInfo = JSON.parse(route.query.routeInfo as string)
-const account = route.query.account
 const orderId = route.query.orderId
 const carInfo = JSON.parse(route.query.carInfo as string)
 let orderTime = ""
 const dialogVisible = ref(false)
-
+const store = useStore()
 
 const orderInfo = reactive({
   user: [] as any
@@ -117,7 +118,7 @@ onBeforeMount(()=>{
 async function loadData(){
   await axios.get('http://localhost:8081/login/login',{
     params:{
-      account: account
+      account: store.state.account
     }
   }).then((res)=>{
     console.log(111,res.data)
@@ -169,9 +170,10 @@ const cancelOrder = () => {
 }
 const onlinePayment = () => {
   console.log('网上支付！')
-  axios.get('http://localhost:8081/order/addOrderAndDelTemporary',{
+  axios.get('http://localhost:8081/order/addOrderAndDelTemporaryAndUpOldOrder',{
     params:{
-      order_number: orderId
+      orderNumber: orderId,
+      oldOrderNumber: route.query.rebookNumber
     }
   }).then((res)=>{
     console.log(res.data)

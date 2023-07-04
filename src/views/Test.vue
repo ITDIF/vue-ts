@@ -8,6 +8,9 @@
   <el-button @click="buy">
     买票
   </el-button>
+  <el-button @click="post">
+    传参
+  </el-button>
 </template>
 
 <script lang="ts" setup>
@@ -17,9 +20,20 @@ import {setup} from "vue-class-component";
 import {useStore} from "vuex";
 import axios from "axios";
 import {ElMessage} from "element-plus";
+import {useRoute, useRouter} from "vue-router";
+const route = useRoute()
+const router = useRouter()
 let ws = null as any
 const store = useStore()
 console.log('account:',store.state.account)
+const post = () => {
+  router.push({
+    path: 't2',
+    params: {
+      op: 'post'
+    }
+  })
+}
 
 const dj = () => {
   // store.commit('increment')

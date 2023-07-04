@@ -1,7 +1,7 @@
 <template>
   <div class="common-layout">
     <el-container>
-      <el-header></el-header>
+      <el-header style="height: 10px;"></el-header>
       <el-main style="margin: auto; border: 1px solid #979a9a; width: 90%;">
         <el-form label-width="70px" :inline="true">
           <el-form-item label="出发地" style="margin-bottom: 0">
@@ -52,7 +52,7 @@
 
 <script lang="ts" setup>
 import {onBeforeMount, reactive, ref} from "vue";
-import { regionData, provinceAndCityData, codeToText } from 'element-china-area-data'
+import { pcaTextArr, pcTextArr } from 'element-china-area-data'
 import type { FormInstance, FormRules } from 'element-plus'
 import {useRoute, useRouter} from "vue-router";
 import moment from "moment";
@@ -63,9 +63,10 @@ const route = useRoute()
 const router = useRouter()
 const formRef = ref<FormInstance>()
 const store = useStore()
-let time = route.query.date
+let time = route?.query.date
+const rebookNumber = route.query?.rebookNumber
 const form = reactive({
-  options: provinceAndCityData,
+  options: pcTextArr,
   start: route.query.start,
   end: route.query.end,
   date: time,
@@ -74,14 +75,14 @@ const form = reactive({
   tableData: []
 })
 onBeforeMount(()=>{
-  // console.log(route.query.start,route.query.end)
+  // console.log(isRebook,route.query.start,route.query.end)
   for (let i = 0; i <= 10; i++) {
     form.days.push(moment().add(i, 'days').format("MM-DD"))
   }
   axios.get('http://localhost:8081/route/queryCarRouteBySED',{
     params:{
-      start: codeToText[form.start![0]!].concat(codeToText[form.start![1]!]),
-      end: codeToText[form.end![0]!].concat(codeToText[form.end![1]!]),
+      start: form.start![0]!.concat(form.start![1]!),
+      end: form.end![0]!.concat(form.end![1]!),
       date: moment().year()+"-"+form.now!.toString()
     }
   }).then((res)=>{
@@ -99,8 +100,8 @@ const tabClick = () =>{
   time = moment().year()+"-"+form.now!.toString()
   axios.get('http://localhost:8081/route/queryCarRouteBySED',{
     params:{
-      start: codeToText[form.start![0]!].concat(codeToText[form.start![1]!]),
-      end: codeToText[form.end![0]!].concat(codeToText[form.end![1]!]),
+      start: form.start![0]!.concat(form.start![1]!),
+      end: form.end![0]!.concat(form.end![1]!),
       date: time
     }
   }).then((res)=>{
@@ -135,14 +136,27 @@ const submit = (row: routeInfo) => {
     })
     return
   }
-  router.push({
-    path: '/order',
-    query: {
-      time: time,
-      routeInfo: JSON.stringify(row),
-      account: store.state.account
-    }
-  })
+  if(rebookNumber == null){
+    router.push({
+      path: '/order',
+      query: {
+        time: time,
+        routeInfo: JSON.stringify(row),
+        account: store.state.account
+      }
+    })
+  }else{
+    router.push({
+      path: '/reOrder',
+      query: {
+        rebookNumber: rebookNumber,
+        time: time,
+        routeInfo: JSON.stringify(row),
+        account: store.state.account
+      }
+    })
+  }
+
 }
 //候补
 const candidate = (row : routeInfo) =>{

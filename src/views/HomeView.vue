@@ -33,7 +33,7 @@
 <script lang="ts" setup>
 import {reactive, ref, onMounted} from "vue";
 import moment from "moment";
-import { regionData,provinceAndCityData, codeToText } from 'element-china-area-data'
+import {pcaTextArr, pcTextArr} from 'element-china-area-data'
 import type { FormInstance, FormRules } from 'element-plus'
 import {useRouter,useRoute} from "vue-router";
 import {ElMessage} from "element-plus";
@@ -44,15 +44,16 @@ const formRef = ref<FormInstance>()
 const store = useStore()
 const account = store.state.account
 const form = reactive({
-  options: provinceAndCityData,
-  start: [''],
-  end: [''],
+  options: pcTextArr,
+  start: [""],
+  end: [""],
   date: moment().format("YYYY-MM-DD"),
 })
 
 
 const submit = (formEl: FormInstance | undefined) => {
   if (!formEl) return
+  // console.log(pcTextArr)
   // console.log(form.start[0],form.start[1],form.end[0],form.end[1])
   // console.log(codeToText[form.start[0]],codeToText[form.start[1]],codeToText[form.end[0]],
   //     codeToText[form.end[1]],form.date)
@@ -96,8 +97,8 @@ const disabledDate = (time: Date) => {
 
 //test
 onMounted(()=>{
-  form.start = ["36","3605"]
-  form.end = ["36","3607"]
+  form.start = ["江西省","新余市"]
+  form.end = ["江西省","赣州市"]
 })
 
 </script>

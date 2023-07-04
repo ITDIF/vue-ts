@@ -95,7 +95,7 @@
                     <el-button
                         type="warning"
                         style="width: 80px"
-                        @click="onlinePayment(e.order_number)"
+                        @click="onlinePayment(e.order_number, e.state)"
                     >去支付</el-button>
                   </el-col>
                 </el-row>
@@ -159,6 +159,7 @@
                     <el-button
                         type="warning"
                         style="width: 80px"
+                        @click="rebook(e)"
                     >改签</el-button>
                   </el-col>
                 </el-row>
@@ -307,6 +308,7 @@
 <script lang="ts" setup>
 import {useStore} from "vuex";
 import {onBeforeMount, onMounted, reactive, ref} from "vue";
+import { regionData } from 'element-china-area-data'
 import axios from "axios";
 import moment from "moment";
 import router from "@/router";
@@ -460,11 +462,17 @@ const pageChange = () =>{
   })
 }
 //网上支付
-const onlinePayment = (orderNumber: string) => {
+const onlinePayment = (orderNumber: string, state: string) => {
   console.log('网上支付！',orderNumber)
-  axios.get('http://localhost:8081/order/addOrderAndDelTemporary',{
+  let url = '';
+  if(state == '未付款'){
+    url = 'http://localhost:8081/order/addOrderAndDelTemporary'
+  }else{
+    url = 'http://localhost:8081/order/addOrderAndDelTemporaryAndUpOldOrder'
+  }
+  axios.get(url,{
     params:{
-      order_number: orderNumber
+      orderNumber: orderNumber
     }
   }).then((res)=>{
     console.log(res.data)
@@ -482,6 +490,22 @@ const onlinePayment = (orderNumber: string) => {
         type: 'error',
       })
       tabOne()
+    }
+  })
+}
+//改签
+const rebook = (e : any) => {
+  console.log('改签')
+  router.push({
+    path: '/ticket',
+    query:{
+      rebookNumber: e.order_number,
+      date: moment(e.departure_time).format("YYYY-MM-DD"),
+      start: [e.from_station.slice(0,e.from_station.indexOf('省')+1),
+        e.from_station.slice(e.from_station.indexOf('省')+1,e.from_station.indexOf('市')+1)],
+      end: [e.to_station.slice(0,e.to_station.indexOf('省')+1),
+        e.to_station.slice(e.to_station.indexOf('省')+1,e.to_station.indexOf('市')+1)],
+      account: store.state.account
     }
   })
 }

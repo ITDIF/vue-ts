@@ -56,9 +56,19 @@ const routes = [
     component: () => import('../views/order/OrderView.vue')
   },
   {
+    path:'/reOrder',
+    name:'reOrder',
+    component: () => import('../views/order/ReOrderView.vue')
+  },
+  {
     path:'/pay',
     name:'pay',
     component: () => import('../views/order/PayView.vue')
+  },
+  {
+    path:'/rebookPayView',
+    name:'rebookPayView',
+    component: () => import('../views/order/RebookPayView.vue')
   },
   {
     path:'/candidate',
