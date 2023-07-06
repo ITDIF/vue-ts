@@ -152,7 +152,8 @@ const userInfo = reactive({
   rebookUser: [] as any
 })
 const order = reactive({
-  info: [] as any
+  info: [] as any,
+  money: 0
 })
 const toOrder = () => {
   userInfo.rebookUser = [] as any
@@ -209,6 +210,7 @@ onMounted(() => {
     o.type = res.data.seat_type+'('+res.data.seat_id+'号)'
     o.userInfo = res.data.username+'('+res.data.id_number+')'
     o.price = res.data.price+'元'
+    order.money = routeInfo.data.price - res.data.price
     order.info.push(o)
     // order.info = res.data
   })
@@ -238,7 +240,8 @@ const submit = () => {
           routeInfo: JSON.stringify(routeInfo.data),
           carInfo: JSON.stringify(carInfo),
           orderId: res.data,
-          rebookNumber: route.query.rebookNumber
+          rebookNumber: route.query.rebookNumber,
+          money: order.money
         }
       })
     }

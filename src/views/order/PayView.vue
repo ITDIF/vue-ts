@@ -171,7 +171,7 @@ const onlinePayment = () => {
   console.log('网上支付！')
   axios.get('http://localhost:8081/order/addOrderAndDelTemporary',{
     params:{
-      order_number: orderId
+      orderNumber: orderId
     }
   }).then((res)=>{
     console.log(res.data)

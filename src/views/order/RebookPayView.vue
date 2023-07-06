@@ -38,6 +38,7 @@
             <el-table-column prop="seat_id" label="座位号"/>
             <el-table-column prop="price" label="票价(元)"/>
           </el-table>
+          <el-text style="float: right"><b style="color: #f36704">改签 票款差价：{{route.query.money}}元</b></el-text>
         </el-card>
         <el-button
             type="info"
@@ -48,7 +49,7 @@
             type="warning"
             style="width: 100px"
             @click="onlinePayment"
-        >网上支付</el-button>
+        >立刻改签</el-button>
       </el-main>
       <el-footer>Footer</el-footer>
     </el-container>
