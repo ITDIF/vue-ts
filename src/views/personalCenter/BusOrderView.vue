@@ -335,7 +335,6 @@ onBeforeMount(()=>{
   tabOne()
 })
 const cancelOrder = (url: string) => {
-  console.log('取消订单！',cancelOrderNumber.value,cancelDate.value,url)
   axios.get(url,{
     params:{
       order_number: cancelOrderNumber.value,

@@ -76,6 +76,11 @@ const routes = [
     component: () => import('../views/order/CandidateView.vue')
   },
   {
+    path:'/ticketNoticeView',
+    name:'TicketNoticeView',
+    component: () => import('../views/order/TicketNoticeView.vue')
+  },
+  {
     path:'/personalCenterView',
     name:'PersonalCenterView',
     component: () => import('../views/personalCenter/PersonalCenterView.vue')

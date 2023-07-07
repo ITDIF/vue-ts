@@ -181,7 +181,7 @@ const onlinePayment = () => {
         message: '支付成功！',
         type: 'success',
       })
-      window.history.back()
+      router.push('/personalTicketView')
     }else{
       ElMessage({
         showClose: true,
