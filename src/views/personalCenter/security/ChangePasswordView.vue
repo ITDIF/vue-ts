@@ -186,7 +186,7 @@ const validateOldPassword = (rule: any, value: any, callback: any) => {
         password: modification.oldPassword
       }
     }).then((res)=>{
-      console.log('pass ',res.data)
+      // console.log('pass ',res.data)
       if(!res.data){
         console.log('密码错误')
         callback(new Error('密码错误！'))
