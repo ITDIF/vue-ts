@@ -3,6 +3,7 @@ import createVuexAlong from 'vuex-along' //导入插件
 export default createStore({
   state: {
     account: '000',
+    admin: '000',
     password: '000',
     username: '000',
     login: '登录',
@@ -17,6 +18,9 @@ export default createStore({
     },
     changeAccount(state,account){
       state.account = account
+    },
+    changeAdmin(state,admin){
+      state.admin = admin
     },
     changePassword(state,password){
       state.password = password

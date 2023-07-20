@@ -1,57 +1,106 @@
-<template xmlns="http://www.w3.org/1999/html">
-  <div class="demo-date-picker">
-    <div class="block">
-      <span class="demonstration">乘车日期：</span>
-      <el-date-picker
-          v-model="value1"
-          type="daterange"
-          start-placeholder="Start date"
-          end-placeholder="End date"
-          value-format="YYYY-MM-DD"
-      />
+<template>
+  <el-button @click="resetDateFilter">reset date filter</el-button>
+  <el-button @click="clearFilter">reset all filters</el-button>
+  <el-table ref="tableRef" row-key="date" :data="tableData" style="width: 100%">
+    <el-table-column
+        prop="date"
+        label="Date"
+        sortable
+        width="180"
+        column-key="date"
+        :filters="[
+        { text: '2016-05-01', value: '2016-05-01' },
+        { text: '2016-05-02', value: '2016-05-02' },
+        { text: '2016-05-03', value: '2016-05-03' },
+        { text: '2016-05-04', value: '2016-05-04' },
+      ]"
+        :filter-method="filterHandler"
+    />
+    <el-table-column prop="name" label="Name" width="180" />
+    <el-table-column prop="address" label="Address" :formatter="formatter" />
 
-    </div>
-    <el-button @click="clicked">查询</el-button>
-  </div>
-
+    <el-table-column
+        prop="tag"
+        label="Tag"
+        width="100"
+        :filters="[
+        { text: 'Home', value: 'Home' },
+        { text: 'Office', value: 'Office' },
+      ]"
+        :filter-method="filterTag"
+        filter-placement="bottom-end"
+    >
+      <template #default="scope">
+        <el-tag
+            :type="scope.row.tag === 'Home' ? '' : 'success'"
+            disable-transitions
+        >{{ scope.row.tag }}</el-tag
+        >
+      </template>
+    </el-table-column>
+  </el-table>
 </template>
 
 <script lang="ts" setup>
-import {onBeforeMount, onMounted, reactive, ref} from "vue";
-import type { FormInstance, FormRules } from 'element-plus'
-import {useRoute, useRouter} from "vue-router";
-import moment from "moment";
-import axios from "axios";
-import {ElMessage, ElMessageBox} from "element-plus";
-import {useStore} from "vuex";
-const route = useRoute()
-const router = useRouter()
-const store = useStore()
-const value1 = ref()
+import { ref } from 'vue'
+import type { TableColumnCtx, TableInstance } from 'element-plus'
 
-const click = () => {
-  if(value1.value == undefined) return
-  console.log(value1.value[0],value1.value[1])
+interface User {
+  date: string
+  name: string
+  address: string
+  tag: string
 }
-const clicked = ref(click)
-console.log('op: ',route.params.op)
+
+const tableRef = ref<TableInstance>()
+
+const resetDateFilter = () => {
+  tableRef.value!.clearFilter(['date'])
+}
+const clearFilter = () => {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-expect-error
+  tableRef.value!.clearFilter()
+}
+const formatter = (row: User, column: TableColumnCtx<User>) => {
+  return row.address
+}
+const filterTag = (value: string, row: User) => {
+  return row.tag === value
+}
+const filterHandler = (
+    value: string,
+    row: User,
+    column: TableColumnCtx<User>
+) => {
+  const property = column['property']
+  return row[property] === value
+}
+
+const tableData: User[] = [
+  {
+    date: '2016-05-03',
+    name: 'Tom',
+    address: 'No. 189, Grove St, Los Angeles',
+    tag: 'Home',
+  },
+  {
+    date: '2016-05-02',
+    name: 'Tom',
+    address: 'No. 189, Grove St, Los Angeles',
+    tag: 'Office',
+  },
+  {
+    date: '2016-05-04',
+    name: 'Tom',
+    address: 'No. 189, Grove St, Los Angeles',
+    tag: 'Home',
+  },
+  {
+    date: '2016-05-01',
+    name: 'Tom',
+    address: 'No. 189, Grove St, Los Angeles',
+    tag: 'Office',
+  },
+]
 </script>
-
-<style scoped>
-
-.demo-date-picker {
-  display: flex;
-  width: 100%;
-  padding: 0;
-  flex-wrap: wrap;
-}
-.demo-date-picker .block {
-  padding: 30px 0;
-  text-align: center;
-  border-right: solid 1px var(--el-border-color);
-  flex: 1;
-}
-.demo-date-picker .block:last-child {
-  border-right: none;
-}
-</style>

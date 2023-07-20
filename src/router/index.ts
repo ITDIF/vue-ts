@@ -1,6 +1,12 @@
-import { createRouter, createWebHashHistory } from 'vue-router'
+import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 
+const backgroundFiles = require.context('./backgroundModules', true, /\.ts$/)
+let backgroundModules: Array<RouteRecordRaw> = []
+backgroundFiles.keys().forEach((key) => {
+  if (key === './index.ts') return
+  backgroundModules = backgroundModules.concat(backgroundFiles(key).default)
+})
 const routes = [
   {
     path: '/',
@@ -130,6 +136,7 @@ const routes = [
     name:'ChangePhoneView',
     component: () => import('../views/personalCenter/security/ChangePhoneView.vue')
   },
+    ...backgroundModules
 ]
 
 const router = createRouter({
