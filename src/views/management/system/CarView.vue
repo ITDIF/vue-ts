@@ -37,23 +37,18 @@
   </el-row>
   <el-table
       highlight-current-row
-      :data="user.data"
+      :data="car.data"
       border
       :header-cell-style="{textAlign: 'center'}"
       :cell-style="{ textAlign: 'center' }"
       style="margin-top: 10px"
-      v-loading="user.load"
+      v-loading="car.load"
   >
     <el-table-column type="selection" width="35" />
-    <el-table-column label="账号" prop="account"/>
-    <el-table-column label="密码" prop="password"/>
-    <el-table-column label="姓名" prop="username"/>
-    <el-table-column label="电话" prop="phone_number" width="120"/>
-    <el-table-column label="证件类型" prop="id_type" width="130"/>
-    <el-table-column label="证件号" prop="id_number" width="180"/>
-    <el-table-column label="地区" prop="district" width="100"/>
-    <el-table-column label="注册时间" prop="registration_time" width="150" :formatter="timeFormatter"/>
-    <el-table-column label="邮箱" prop="email" width="200"/>
+    <el-table-column label="车辆编号" prop="car_number"/>
+    <el-table-column label="类型" prop="car_type"/>
+    <el-table-column label="席别" prop="seat_type"/>
+    <el-table-column label="载客量" prop="passenger_capacity"/>
     <el-table-column label="状态" prop="state"/>
     <el-table-column label="操作" fixed="right" width="140">
       <template #default="scope">
@@ -83,7 +78,7 @@ import axios from "axios";
 import moment from "moment";
 import { Search } from '@element-plus/icons-vue'
 import {TableInstance} from "element-plus";
-const user = reactive({
+const car = reactive({
   data: [],
   load: true
 })
@@ -103,7 +98,7 @@ onMounted(()=>{
 })
 //订单数量
 const pageCount = () => {
-  axios.get('http://localhost:8081/user/queryUserCount',{
+  axios.get('http://localhost:8081/manage/queryCarCount',{
     params:{
       key: condition.select,
       value: condition.input
@@ -117,7 +112,7 @@ const pageCount = () => {
 //分页
 const pageChange = () =>{
   // console.log('第 ',currentPage.value,'页')
-  axios.get('http://localhost:8081/user/queryUserPaging',{
+  axios.get('http://localhost:8081/manage/queryCarPaging',{
     params:{
       start: (pagination.currentPage - 1) * pagination.pageSize,
       count: pagination.pageSize,
@@ -126,21 +121,18 @@ const pageChange = () =>{
     }
   }).then((res)=>{
     // console.log(res.data)
-    user.data = res.data
-    user.load = false
+    car.data = res.data
+    car.load = false
   })
 }
 //条件查询
 const conditionalSel = () => {
   // console.log(condition.select,condition.input)
-  user.load = true
+  car.load = true
   pageCount()
   pageChange()
 }
-//时间格式化
-function timeFormatter(row:string, column:string, cellValue:string, index:string){
-  return moment(cellValue).format('yyyy-MM-DD HH:mm')
-}
+
 </script>
 
 <style scoped>

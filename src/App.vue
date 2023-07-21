@@ -1,7 +1,7 @@
 <template>
   <div v-if="store.state.admin === '000'"><user/></div>
 <!--  <div v-if="store.state.account === '000'"><admin/></div>-->
-  <div v-if="store.state.account === '000'"><router-view/></div>
+  <div v-if="store.state.admin !== '000'"><router-view/></div>
 </template>
 <script lang="ts" setup>
 import {defineComponent, onBeforeMount, ref} from 'vue';
@@ -15,8 +15,8 @@ defineComponent({
     User
   }
 });
-store.commit('changeAdmin','999')
-store.commit('changeAccount','000')
+// store.commit('changeAdmin','000')
+// store.commit('changeAccount','000')
 </script>
 <style>
 #app {

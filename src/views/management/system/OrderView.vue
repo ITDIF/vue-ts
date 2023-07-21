@@ -1,13 +1,15 @@
 <template>
   <el-row>
-    <el-col :span="10" :offset="5">
+    <el-col :span="10" :offset="7">
       <el-input
-          v-model="input"
+          v-model="condition.input"
           placeholder="关键字"
           class="input-with-select"
+          clearable
+          style="margin-bottom: 10px"
       >
         <template #prepend>
-          <el-select v-model="select" placeholder="请选择" style="width: 85px">
+          <el-select v-model="condition.select" placeholder="请选择" style="width: 85px" clearable>
             <el-option label="订单号" value="order_number" />
             <el-option label="身份证" value="id_number" />
             <el-option label="姓名" value="username" />
@@ -17,19 +19,30 @@
           </el-select>
         </template>
         <template #append>
-          <el-button :icon="Search"/>
+          <el-button
+              :icon="Search"
+              @click="conditionalSel"
+              style="background-color: #409EFF;color: white"/>
         </template>
       </el-input>
     </el-col>
   </el-row>
-
+  <el-row>
+    <el-col :span="2">
+      <el-button type="danger">批量删除</el-button>
+    </el-col>
+    <el-col :span="2">
+      <el-button type="success">添加</el-button>
+    </el-col>
+  </el-row>
   <el-table
       highlight-current-row
       :data="order.data"
       border
       :header-cell-style="{textAlign: 'center'}"
       :cell-style="{ textAlign: 'center' }"
-      style="margin-top: 20px"
+      style="margin-top: 10px"
+      v-loading="order.load"
   >
     <el-table-column type="selection" width="35" />
     <el-table-column label="订单号" prop="order_number" width="130"/>
@@ -83,26 +96,31 @@ import axios from "axios";
 import moment from "moment";
 import { Search } from '@element-plus/icons-vue'
 import {TableInstance} from "element-plus";
-const input = ref('')
-const select = ref('')
-const tableRef = ref<TableInstance>()
 const order = reactive({
-  data: []
+  data: [],
+  load: true
 })
 const pagination = reactive({
   currentPage: 1,
   total: 0,
   pageSize: 10
 })
+const condition = reactive({
+  input: '',
+  select: ''
+})
 
 onMounted(()=>{
-  pageCount('http://localhost:8081/manage/queryOrderCount')
+  pageCount()
   pageChange()
-
 })
 //订单数量
-const pageCount = (url: string) => {
-  axios.get(url,{
+const pageCount = () => {
+  axios.get('http://localhost:8081/manage/queryOrderCount',{
+    params:{
+      key: condition.select,
+      value: condition.input
+    }
   }).then((res)=>{
     // console.log(res.data)
     pagination.total = res.data
@@ -115,12 +133,22 @@ const pageChange = () =>{
   axios.get('http://localhost:8081/manage/queryOrderListPaging',{
     params:{
       start: (pagination.currentPage - 1) * pagination.pageSize,
-      count: pagination.pageSize
+      count: pagination.pageSize,
+      key: condition.select,
+      value: condition.input
     }
   }).then((res)=>{
-    console.log(res.data)
+    // console.log(res.data)
     order.data = res.data
+    order.load = false
   })
+}
+//条件查询
+const conditionalSel = () => {
+  // console.log(condition.select,condition.input)
+  order.load = true
+  pageCount()
+  pageChange()
 }
 const filterState = (value: string, row: any) => {
   return row.state === value

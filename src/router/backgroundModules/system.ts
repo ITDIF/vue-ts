@@ -6,23 +6,33 @@ const System: Array<RouteRecordRaw> = [
         component: () => import('@/views/management/AdminView.vue'),
         children: [
             {
-                path: 'order',
-                name: 'order',
+                path: 'orders',
+                name: 'orders',
                 component: () => import('@/views/management/system/OrderView.vue')
             },
             {
-                path: 'ticket',
-                name: 'ticket',
+                path: 'tickets',
+                name: 'tickets',
                 component: () => import('@/views/management/system/TicketView.vue')
             },
             {
-                path: 'user',
-                name: 'user',
+                path: 'cars',
+                name: 'cars',
+                component: () => import('@/views/management/system/CarView.vue')
+            },
+            {
+                path: 'routers',
+                name: 'routers',
+                component: () => import('@/views/management/system/RouterView.vue')
+            },
+            {
+                path: 'users',
+                name: 'users',
                 component: () => import('@/views/management/system/UserView.vue')
             },
             {
-                path: 'admin',
-                name: 'admin',
+                path: 'admins',
+                name: 'admins',
                 component: () => import('@/views/management/system/AdminView.vue')
             },
         ]

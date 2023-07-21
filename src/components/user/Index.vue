@@ -39,6 +39,10 @@
     <el-menu-item>团购服务</el-menu-item>
     <el-menu-item>包车服务</el-menu-item>
     <el-menu-item>客户服务</el-menu-item>
+    <el-sub-menu  index="3">
+      <template #title>其他</template>
+      <el-menu-item index="/adminLogin">管理员登录</el-menu-item>
+    </el-sub-menu>
   </el-menu>
   <router-view/>
 </template>
