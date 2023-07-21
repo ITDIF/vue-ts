@@ -1,5 +1,6 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+import store from "@/store";
 
 const backgroundFiles = require.context('./backgroundModules', true, /\.ts$/)
 let backgroundModules: Array<RouteRecordRaw> = []
@@ -7,11 +8,24 @@ backgroundFiles.keys().forEach((key) => {
   if (key === './index.ts') return
   backgroundModules = backgroundModules.concat(backgroundFiles(key).default)
 })
+// const customFiles = require.context('./customModules', true, /\.ts$/)
+// let customModules: Array<RouteRecordRaw> = []
+// customFiles.keys().forEach((key) => {
+//   if (key === './index.ts') return
+//   customModules = customModules.concat(customFiles(key).default)
+// })
 const routes = [
   {
     path: '/',
     name: 'home',
-    component: HomeView
+    component: HomeView,
+    beforeEnter: (to: any, from: any, next: any) => {
+      if(store.state.admin != '000'){
+        next('/sys/orders')
+      }else{
+        next()
+      }
+    }
   },
   {
     path: '/about',
@@ -136,13 +150,29 @@ const routes = [
     name:'ChangePhoneView',
     component: () => import('../views/personalCenter/security/ChangePhoneView.vue')
   },
-    ...backgroundModules
+    ...backgroundModules,
 ]
 
 const router = createRouter({
   history: createWebHashHistory(),
   routes
 })
+
+router.beforeEach((to, from, next) => {
+  // const token = localStorage.getItem('token');
+  // const isAuthenticated = token && jwt.verify(token, 'your-secret-key'); // replace 'your-secret-key' with your actual secret key
+  //
+  // if (to.meta.requiresAuth && !isAuthenticated) {
+  //   next({ name: 'Login' });
+  // } else if (to.meta.guestOnly && isAuthenticated) {
+  //   next({ name: 'Home' });
+  // } else {
+  //   next();
+  // }
+  next()
+  // console.log('route ',to.path,store.state.admin)
+});
+
 
 export default router
 

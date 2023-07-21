@@ -1,20 +1,34 @@
 <template>
   <div v-if="store.state.admin === '000'"><user/></div>
-<!--  <div v-if="store.state.account === '000'"><admin/></div>-->
+<!--  <div v-if="store.state.admin !== '000'"><admin/></div>-->
   <div v-if="store.state.admin !== '000'"><router-view/></div>
+<!--  <router-view/>-->
 </template>
 <script lang="ts" setup>
-import {defineComponent, onBeforeMount, ref} from 'vue';
+import {defineComponent, onBeforeMount, onUnmounted, ref} from 'vue';
 import Admin from '@/components/admin/Index.vue'
 import User from '@/components/user/Index.vue'
 import {useStore} from "vuex";
+import router from "@/router";
+import {useRoute} from "vue-router";
 const store = useStore()
+const route = useRoute()
 defineComponent({
   components: {
     Admin,
     User
   }
 });
+console.log('admin',store.state.admin)
+console.log('account',store.state.account)
+
+onBeforeMount(()=>{
+  // if(store.state.admin !== '000'){
+  //   router.push('/sys')
+  // }
+})
+
+
 // store.commit('changeAdmin','000')
 // store.commit('changeAccount','000')
 </script>

@@ -31,18 +31,27 @@
 
 
 <script lang="ts" setup>
-import {reactive, ref, onMounted} from "vue";
+import {reactive, ref, onMounted, defineComponent} from "vue";
 import moment from "moment";
+import Layout from "../layout/custom/Index.vue"
 import {pcaTextArr, pcTextArr} from 'element-china-area-data'
 import type { FormInstance, FormRules } from 'element-plus'
 import {useRouter,useRoute} from "vue-router";
 import {ElMessage} from "element-plus";
 import {useStore} from "vuex";
+import Admin from "@/components/admin/Index.vue";
+import User from "@/components/user/Index.vue";
 const router = useRouter()
 const route = useRoute()
 const formRef = ref<FormInstance>()
 const store = useStore()
 const account = store.state.account
+
+defineComponent({
+  components: {
+    Layout
+  }
+});
 const form = reactive({
   options: pcTextArr,
   start: [""],
@@ -66,7 +75,7 @@ const submit = (formEl: FormInstance | undefined) => {
           date: form.date,
           start: form.start,
           end: form.end,
-          account: account
+          account: store.state.account
         }
       })
     } else {

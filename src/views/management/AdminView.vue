@@ -54,7 +54,7 @@
             </el-sub-menu>
           </el-menu>
           <el-affix>
-            <el-button @click="click">
+            <el-button @click="isCollapse = !isCollapse">
               <el-icon v-if="!isCollapse" size="large"><Fold /></el-icon>
               <el-icon v-if="isCollapse" size="large"><Expand /></el-icon>
             </el-button>
@@ -77,9 +77,6 @@ const store = useStore()
 const router = useRouter()
 const isCollapse = ref(false)
 
-const click = () => {
-  isCollapse.value = !isCollapse.value
-}
 
 const quit = () => {
   ElMessageBox.confirm(
