@@ -10,12 +10,12 @@
       >
         <template #prepend>
           <el-select v-model="condition.select" placeholder="请选择" style="width: 85px" clearable>
-            <el-option label="订单号" value="order_number" />
+            <el-option label="账号" value="account" />
             <el-option label="身份证" value="id_number" />
             <el-option label="姓名" value="username" />
-            <el-option label="车次" value="route_number" />
-            <el-option label="起点" value="from_station" />
-            <el-option label="终点" value="to_station" />
+            <el-option label="电话" value="phone_number" />
+            <el-option label="权限" value="grade" />
+            <el-option label="状态" value="state" />
           </el-select>
         </template>
         <template #append>
@@ -34,6 +34,9 @@
     <el-col :span="2">
       <el-button type="success">添加</el-button>
     </el-col>
+    <el-col :span="1">
+      <el-button type="info" @click="refresh">刷新</el-button>
+    </el-col>
   </el-row>
   <el-table
       highlight-current-row
@@ -45,16 +48,16 @@
       v-loading="admin.load"
   >
     <el-table-column type="selection" width="35" />
-    <el-table-column label="账号" prop="account"/>
-    <el-table-column label="类密码型" prop="password"/>
+    <el-table-column label="账号" prop="account" width="100"/>
+    <el-table-column label="密码" prop="password" width="100"/>
     <el-table-column label="姓名" prop="username"/>
-    <el-table-column label="手机号" prop="phone_number"/>
-    <el-table-column label="证件类型" prop="id_type"/>
-    <el-table-column label="证件号" prop="id_number"/>
+    <el-table-column label="手机号" prop="phone_number" width="120"/>
+    <el-table-column label="证件类型" prop="id_type" width="130"/>
+    <el-table-column label="证件号" prop="id_number" width="180"/>
     <el-table-column label="地区" prop="district"/>
-    <el-table-column label="注册时间" prop="registration_time"/>
-    <el-table-column label="权限等级" prop="grade"/>
-    <el-table-column label="邮箱" prop="email"/>
+    <el-table-column label="注册时间" prop="registration_time" width="150" :formatter="timeFormatter"/>
+    <el-table-column label="权限等级" prop="grade" width="100"/>
+    <el-table-column label="邮箱" prop="email" width="200"/>
     <el-table-column label="状态" prop="state"/>
     <el-table-column label="操作" fixed="right" width="140">
       <template #default="scope">
@@ -84,6 +87,7 @@ import axios from "axios";
 import moment from "moment";
 import { Search } from '@element-plus/icons-vue'
 import {TableInstance} from "element-plus";
+import router from "@/router";
 const admin = reactive({
   data: [],
   load: true
@@ -138,7 +142,14 @@ const conditionalSel = () => {
   pageCount()
   pageChange()
 }
-
+//刷新
+const refresh = () => {
+  router.go(0)
+}
+//时间格式化
+function timeFormatter(row:string, column:string, cellValue:string, index:string){
+  return moment(cellValue).format('yyyy-MM-DD HH:mm')
+}
 </script>
 
 <style scoped>

@@ -45,7 +45,13 @@
                 <el-icon><setting /></el-icon>
                 <span>系统管理</span>
               </template>
-              <el-menu-item index="orders"><el-icon><Tickets /></el-icon>订单管理</el-menu-item>
+              <el-sub-menu index="4">
+                <template #title><el-icon><List /></el-icon>订单管理</template>
+                <el-menu-item index="orders"><el-icon><Tickets /></el-icon>订单</el-menu-item>
+                <el-menu-item index="orderTem"><el-icon><Memo /></el-icon>临时订单</el-menu-item>
+                <el-menu-item index="candidates"><el-icon><Document /></el-icon>候补订单</el-menu-item>
+              </el-sub-menu>
+<!--              <el-menu-item index="orders"><el-icon><Tickets /></el-icon>订单管理</el-menu-item>-->
               <el-menu-item index="tickets"><el-icon><Ticket /></el-icon>车票管理</el-menu-item>
               <el-menu-item index="routers"><el-icon><Guide /></el-icon>车次管理</el-menu-item>
               <el-menu-item index="cars"><el-icon><Van /></el-icon>车辆管理</el-menu-item>

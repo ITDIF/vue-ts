@@ -34,6 +34,9 @@
     <el-col :span="2">
       <el-button type="success">添加</el-button>
     </el-col>
+    <el-col :span="1">
+      <el-button type="info" @click="refresh">刷新</el-button>
+    </el-col>
   </el-row>
   <el-table
       highlight-current-row
@@ -96,6 +99,7 @@ import axios from "axios";
 import moment from "moment";
 import { Search } from '@element-plus/icons-vue'
 import {TableInstance} from "element-plus";
+import router from "@/router";
 const order = reactive({
   data: [],
   load: true
@@ -152,6 +156,10 @@ const conditionalSel = () => {
 }
 const filterState = (value: string, row: any) => {
   return row.state === value
+}
+//刷新
+const refresh = () => {
+  router.go(0)
 }
 //时间格式化
 function timeFormatter(row:string, column:string, cellValue:string, index:string){

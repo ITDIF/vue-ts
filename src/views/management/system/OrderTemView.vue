@@ -40,12 +40,12 @@
   </el-row>
   <el-table
       highlight-current-row
-      :data="order.data"
+      :data="orderTem.data"
       border
       :header-cell-style="{textAlign: 'center'}"
       :cell-style="{ textAlign: 'center' }"
       style="margin-top: 10px"
-      v-loading="order.load"
+      v-loading="orderTem.load"
   >
     <el-table-column type="selection" width="35" />
     <el-table-column label="订单号" prop="order_number" width="130"/>
@@ -70,7 +70,6 @@
         :filter-method="filterState"
         width="120"
     />
-    <el-table-column label="支付时间" prop="pay_time" width="160" :formatter="timeFormatter2"/>
     <el-table-column label="操作" fixed="right" width="140">
       <template #default="scope">
         <el-button size="small">编辑</el-button>
@@ -100,7 +99,7 @@ import moment from "moment";
 import { Search } from '@element-plus/icons-vue'
 import {TableInstance} from "element-plus";
 import router from "@/router";
-const order = reactive({
+const orderTem = reactive({
   data: [],
   load: true
 })
@@ -120,7 +119,7 @@ onMounted(()=>{
 })
 //订单数量
 const pageCount = () => {
-  axios.get('http://localhost:8081/manage/queryOrderCount',{
+  axios.get('http://localhost:8081/manage/queryOrderTemporaryCount',{
     params:{
       key: condition.select,
       value: condition.input
@@ -134,7 +133,7 @@ const pageCount = () => {
 //分页
 const pageChange = () =>{
   // console.log('第 ',currentPage.value,'页')
-  axios.get('http://localhost:8081/manage/queryOrderListPaging',{
+  axios.get('http://localhost:8081/manage/queryOrderTemporaryPaging',{
     params:{
       start: (pagination.currentPage - 1) * pagination.pageSize,
       count: pagination.pageSize,
@@ -143,14 +142,14 @@ const pageChange = () =>{
     }
   }).then((res)=>{
     // console.log(res.data)
-    order.data = res.data
-    order.load = false
+    orderTem.data = res.data
+    orderTem.load = false
   })
 }
 //条件查询
 const conditionalSel = () => {
   // console.log(condition.select,condition.input)
-  order.load = true
+  orderTem.load = true
   pageCount()
   pageChange()
 }

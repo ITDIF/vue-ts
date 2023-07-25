@@ -12,10 +12,7 @@
           <el-select v-model="condition.select" placeholder="请选择" style="width: 85px" clearable>
             <el-option label="订单号" value="order_number" />
             <el-option label="身份证" value="id_number" />
-            <el-option label="姓名" value="username" />
             <el-option label="车次" value="route_number" />
-            <el-option label="起点" value="from_station" />
-            <el-option label="终点" value="to_station" />
           </el-select>
         </template>
         <template #append>
@@ -40,37 +37,21 @@
   </el-row>
   <el-table
       highlight-current-row
-      :data="order.data"
+      :data="candidate.data"
       border
       :header-cell-style="{textAlign: 'center'}"
       :cell-style="{ textAlign: 'center' }"
       style="margin-top: 10px"
-      v-loading="order.load"
+      v-loading="candidate.load"
   >
     <el-table-column type="selection" width="35" />
     <el-table-column label="订单号" prop="order_number" width="130"/>
-    <el-table-column label="姓名" prop="username"/>
-    <el-table-column label="身份证" prop="id_number" width="170"/>
     <el-table-column label="车次" prop="route_number"/>
+    <el-table-column label="身份证" prop="id_number" width="170"/>
     <el-table-column label="时间" prop="departure_time" width="140" :formatter="timeFormatter"/>
-    <el-table-column label="起点" prop="from_station" width="200"/>
-    <el-table-column label="终点" prop="to_station" width="200"/>
-    <el-table-column label="席别" prop="seat_type"/>
-    <el-table-column label="座位" prop="seat_id"/>
-    <el-table-column label="价格(元)" prop="price"/>
-    <el-table-column label="下单时间" prop="order_time" width="160" :formatter="timeFormatter2"/>
-    <el-table-column
-        label="状态"
-        prop="state"
-        :filters="[
-            {text: '已取消', value: '已取消'},
-            {text: '已付款', value: '已付款'},
-            {text: '已改签', value: '已改签'},
-        ]"
-        :filter-method="filterState"
-        width="120"
-    />
-    <el-table-column label="支付时间" prop="pay_time" width="160" :formatter="timeFormatter2"/>
+    <el-table-column label="候补时间" prop="candidate_time" width="160" :formatter="timeFormatter2"/>
+    <el-table-column label="截止(h)" prop="deadline"/>
+    <el-table-column label="状态" prop="state" width="170"/>
     <el-table-column label="操作" fixed="right" width="140">
       <template #default="scope">
         <el-button size="small">编辑</el-button>
@@ -100,7 +81,7 @@ import moment from "moment";
 import { Search } from '@element-plus/icons-vue'
 import {TableInstance} from "element-plus";
 import router from "@/router";
-const order = reactive({
+const candidate = reactive({
   data: [],
   load: true
 })
@@ -120,7 +101,7 @@ onMounted(()=>{
 })
 //订单数量
 const pageCount = () => {
-  axios.get('http://localhost:8081/manage/queryOrderCount',{
+  axios.get('http://localhost:8081/candidate/queryCandidateCount',{
     params:{
       key: condition.select,
       value: condition.input
@@ -134,7 +115,7 @@ const pageCount = () => {
 //分页
 const pageChange = () =>{
   // console.log('第 ',currentPage.value,'页')
-  axios.get('http://localhost:8081/manage/queryOrderListPaging',{
+  axios.get('http://localhost:8081/candidate/queryCandidatePaging',{
     params:{
       start: (pagination.currentPage - 1) * pagination.pageSize,
       count: pagination.pageSize,
@@ -143,14 +124,14 @@ const pageChange = () =>{
     }
   }).then((res)=>{
     // console.log(res.data)
-    order.data = res.data
-    order.load = false
+    candidate.data = res.data
+    candidate.load = false
   })
 }
 //条件查询
 const conditionalSel = () => {
   // console.log(condition.select,condition.input)
-  order.load = true
+  candidate.load = true
   pageCount()
   pageChange()
 }

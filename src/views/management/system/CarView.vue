@@ -10,12 +10,11 @@
       >
         <template #prepend>
           <el-select v-model="condition.select" placeholder="请选择" style="width: 85px" clearable>
-            <el-option label="订单号" value="order_number" />
-            <el-option label="身份证" value="id_number" />
-            <el-option label="姓名" value="username" />
-            <el-option label="车次" value="route_number" />
-            <el-option label="起点" value="from_station" />
-            <el-option label="终点" value="to_station" />
+            <el-option label="车辆编号" value="car_number" />
+            <el-option label="类型" value="car_type" />
+            <el-option label="席别" value="seat_type" />
+            <el-option label="载客量" value="passenger_capacity" />
+            <el-option label="状态" value="state" />
           </el-select>
         </template>
         <template #append>
@@ -33,6 +32,9 @@
     </el-col>
     <el-col :span="2">
       <el-button type="success">添加</el-button>
+    </el-col>
+    <el-col :span="1">
+      <el-button type="info" @click="refresh">刷新</el-button>
     </el-col>
   </el-row>
   <el-table
@@ -78,6 +80,7 @@ import axios from "axios";
 import moment from "moment";
 import { Search } from '@element-plus/icons-vue'
 import {TableInstance} from "element-plus";
+import router from "@/router";
 const car = reactive({
   data: [],
   load: true
@@ -132,7 +135,10 @@ const conditionalSel = () => {
   pageCount()
   pageChange()
 }
-
+//刷新
+const refresh = () => {
+  router.go(0)
+}
 </script>
 
 <style scoped>

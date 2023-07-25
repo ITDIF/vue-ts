@@ -11,6 +11,16 @@ const System: Array<RouteRecordRaw> = [
                 component: () => import('@/views/management/system/OrderView.vue')
             },
             {
+                path: 'candidates',
+                name: 'candidates',
+                component: () => import('@/views/management/system/CandidateView.vue')
+            },
+            {
+                path: 'orderTem',
+                name: 'orderTem',
+                component: () => import('@/views/management/system/OrderTemView.vue')
+            },
+            {
                 path: 'tickets',
                 name: 'tickets',
                 component: () => import('@/views/management/system/TicketView.vue')
