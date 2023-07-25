@@ -70,7 +70,6 @@
             <el-button size="small" type="danger">删除</el-button>
           </template>
         </el-popconfirm>
-<!--        <el-button size="small" type="danger" @click="del(scope.row.account)">删除</el-button>-->
       </template>
     </el-table-column>
   </el-table>
@@ -250,6 +249,10 @@ const pageChange = () =>{
   }).then((res)=>{
     // console.log(res.data)
     user.data = res.data
+    if(pagination.currentPage != 0 && user.data.length == 0){
+      pagination.currentPage--
+      pageChange()
+    }
     user.load = false
   })
 }
@@ -336,7 +339,7 @@ const edit = () => {
         title: '编辑成功',
         type: 'success',
       })
-      dialogVisible2.value = false
+      dialogVisible.value = false
       pageCount()
       pageChange()
     }else{
