@@ -144,9 +144,6 @@
       <el-form-item label="下单时间">
         <el-input v-model="dialogDate.order_time" clearable/>
       </el-form-item>
-      <el-form-item label="状态">
-        <el-input v-model="dialogDate.state" clearable/>
-      </el-form-item>
       <el-form-item label="支付时间">
         <el-input v-model="dialogDate.pay_time" clearable/>
       </el-form-item>
@@ -365,7 +362,7 @@ const add = (formEl: FormInstance | undefined) => {
 }
 //编辑
 const edit = () => {
-  axios.get('http://localhost:8081/manage/upOrderAndTicket',{
+  axios.get('http://localhost:8081/ticket/update',{
     params:{
       data: JSON.stringify(dialogDate.value),
       date: moment(currentDate.value).format("YYYY-MM-DD")
