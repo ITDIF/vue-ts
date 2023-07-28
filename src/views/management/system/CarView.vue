@@ -355,7 +355,7 @@ const rules = reactive<FormRules>({
     { required: true, message: '请输入席别', trigger: 'blur'},
   ],
   passenger_capacity:[
-    { required: true, message: '请输入载客量', trigger: 'change'},
+    { required: true, message: '请输入载客量', trigger: 'blur'},
   ],
 })
 </script>
