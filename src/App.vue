@@ -19,18 +19,9 @@ defineComponent({
     User
   }
 });
-console.log('admin',store.state.admin)
-console.log('account',store.state.account)
+// console.log('admin',store.state.admin)
+// console.log('account',store.state.account)
 
-onBeforeMount(()=>{
-  // if(store.state.admin !== '000'){
-  //   router.push('/sys')
-  // }
-})
-
-
-// store.commit('changeAdmin','000')
-// store.commit('changeAccount','000')
 </script>
 <style>
 #app {

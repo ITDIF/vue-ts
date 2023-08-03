@@ -45,6 +45,11 @@ const System: Array<RouteRecordRaw> = [
                 name: 'admins',
                 component: () => import('@/views/management/system/AdminView.vue')
             },
+            {
+                path: 'customerServices',
+                name: 'customerServices',
+                component: () => import('@/views/management/customerService/CustomerService.vue')
+            },
         ]
     },
 ]

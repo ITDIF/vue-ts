@@ -35,6 +35,12 @@
             <el-menu-item index="5-1">投诉</el-menu-item>
             <el-menu-item index="5-2">建议</el-menu-item>
           </el-sub-menu>
+          <el-sub-menu index="6">
+            <template #title>
+              <span>客户服务</span>
+            </template>
+            <el-menu-item index="customerService">人工客服</el-menu-item>
+          </el-sub-menu>
         </el-menu>
       </el-aside>
       <el-main

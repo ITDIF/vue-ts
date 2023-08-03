@@ -294,14 +294,13 @@ const handleSelectionChange = (val: []) => {
 }
 //批量删除
 const batchDel = () =>{
-  let accounts = []
+  let orderNumbers = []
   for (const e in multipleSelection.value) {
-    accounts.push(multipleSelection.value[e].account)
+    orderNumbers.push(multipleSelection.value[e].order_number)
   }
-  console.log(accounts,typeof accounts)
-  axios.get('http://localhost:8081/manage/batchDelUser',{
+  axios.get('http://localhost:8081/order/batchDel',{
     params:{
-      accounts: JSON.stringify(accounts)
+      orderNumbers: JSON.stringify(orderNumbers)
     }
   }).then((res)=>{
     console.log(res.data)
@@ -391,7 +390,7 @@ const edit = () => {
 
 //删除
 const del = (order: any) =>{
-  axios.get('http://localhost:8081/order/upOrderAndDelTicket',{
+  axios.get('http://localhost:8081/order/deleteOrderByOrderNumber',{
     params:{
       order_number: order.order_number,
       date: moment(order.departure_time).format("YYYY-MM-DD")

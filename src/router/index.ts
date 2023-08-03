@@ -150,6 +150,11 @@ const routes = [
     name:'ChangePhoneView',
     component: () => import('../views/personalCenter/security/ChangePhoneView.vue')
   },
+  {
+    path: '/customerService',
+    name: 'customerService',
+    component: () => import('../views/personalCenter/client/ManualCustomerService.vue'),
+  },
     ...backgroundModules,
 ]
 

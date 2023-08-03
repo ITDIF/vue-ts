@@ -29,7 +29,7 @@
   </el-row>
   <el-row>
     <el-col :span="2">
-      <el-popconfirm title="确定要批量删除选中的订单吗？" @confirm="batchDel">
+      <el-popconfirm title="确定要批量删除选中的车票吗？" @confirm="batchDel">
         <template #reference>
           <el-button type="danger" :disabled="multipleSelection.length === 0">批量删除</el-button>
         </template>
@@ -44,12 +44,12 @@
   </el-row>
   <el-table
       highlight-current-row
-      :data="order.data"
+      :data="ticket.data"
       border
       :header-cell-style="{textAlign: 'center'}"
       :cell-style="{ textAlign: 'center' }"
       style="margin-top: 10px"
-      v-loading="order.load"
+      v-loading="ticket.load"
       @selection-change="handleSelectionChange"
   >
     <el-table-column type="selection" width="35" />
@@ -62,24 +62,12 @@
     <el-table-column label="终点" prop="to_station" width="200"/>
     <el-table-column label="席别" prop="seat_type"/>
     <el-table-column label="座位" prop="seat_id"/>
-    <el-table-column label="价格(元)" prop="price"/>
-    <el-table-column label="下单时间" prop="order_time" width="160" :formatter="timeFormatter2"/>
-    <el-table-column
-        label="状态"
-        prop="state"
-        :filters="[
-            {text: '已取消', value: '已取消'},
-            {text: '已付款', value: '已付款'},
-            {text: '已改签', value: '已改签'},
-        ]"
-        :filter-method="filterState"
-        width="120"
-    />
-    <el-table-column label="支付时间" prop="pay_time" width="160" :formatter="timeFormatter2"/>
+    <el-table-column label="金额(元)" prop="price"/>
+    <el-table-column label="出票时间" prop="ticket_issuance_time" width="160" :formatter="timeFormatter2"/>
     <el-table-column label="操作" fixed="right" width="140">
       <template #default="scope">
         <el-button size="small" @click="dialogVisible=true;dialogDate={...scope.row};currentDate=scope.row.departure_time">编辑</el-button>
-        <el-popconfirm title="确定要删除该订单吗？" @confirm="del(scope.row)">
+        <el-popconfirm title="确定要删除该车票吗？" @confirm="del(scope.row)">
           <template #reference>
             <el-button size="small" type="danger">删除</el-button>
           </template>
@@ -124,7 +112,7 @@
         <el-input v-model="dialogDate.id_number" clearable/>
       </el-form-item>
       <el-form-item label="发车时间" prop="departure_time">
-        <el-input v-model="dialogDate.departure_time" clearable/>
+        <el-date-picker type="datetime" v-model="dialogDate.departure_time" placeholder="请选择发车时间" clearable/>
       </el-form-item>
       <el-form-item label="起点">
         <el-input v-model="dialogDate.from_station" clearable/>
@@ -141,11 +129,8 @@
       <el-form-item label="金额">
         <el-input v-model="dialogDate.price" clearable/>
       </el-form-item>
-      <el-form-item label="下单时间">
-        <el-input v-model="dialogDate.order_time" clearable/>
-      </el-form-item>
-      <el-form-item label="支付时间">
-        <el-input v-model="dialogDate.pay_time" clearable/>
+      <el-form-item label="出票时间">
+        <el-date-picker type="datetime" v-model="dialogDate.ticket_issuance_time" clearable/>
       </el-form-item>
     </el-form>
     <template #footer>
@@ -183,7 +168,7 @@
         <el-input v-model="dialogDate2.id_number" clearable/>
       </el-form-item>
       <el-form-item label="发车时间" prop="departure_time">
-        <el-input v-model="dialogDate2.departure_time" clearable/>
+        <el-date-picker type="datetime" v-model="dialogDate2.departure_time" placeholder="请选择发车时间" clearable/>
       </el-form-item>
       <el-form-item label="起点">
         <el-input v-model="dialogDate2.from_station" clearable/>
@@ -200,14 +185,8 @@
       <el-form-item label="金额">
         <el-input v-model="dialogDate2.price" clearable/>
       </el-form-item>
-      <el-form-item label="下单时间">
-        <el-input v-model="dialogDate.order_time" clearable/>
-      </el-form-item>
-      <el-form-item label="状态">
-        <el-input v-model="dialogDate2.state" clearable/>
-      </el-form-item>
-      <el-form-item label="支付时间">
-        <el-input v-model="dialogDate2.pay_time" clearable/>
+      <el-form-item label="出票时间">
+        <el-date-picker type="datetime" v-model="dialogDate2.ticket_issuance_time" clearable/>
       </el-form-item>
     </el-form>
     <template #footer>
@@ -235,7 +214,7 @@ const dialogVisible2 = ref(false)
 const dialogDate = ref({})
 const dialogDate2 = ref({} as any)
 const currentDate = ref('')
-const order = reactive({
+const ticket = reactive({
   data: [],
   load: true
 })
@@ -278,12 +257,12 @@ const pageChange = () =>{
     }
   }).then((res)=>{
     // console.log(res.data)
-    order.data = res.data
-    if(pagination.currentPage != 0 && order.data.length == 0){
+    ticket.data = res.data
+    if(pagination.currentPage != 0 && ticket.data.length == 0){
       pagination.currentPage--
       pageChange()
     }
-    order.load = false
+    ticket.load = false
   })
 }
 const handleSelectionChange = (val: []) => {
@@ -291,37 +270,37 @@ const handleSelectionChange = (val: []) => {
 }
 //批量删除
 const batchDel = () =>{
-  let accounts = []
-  for (const e in multipleSelection.value) {
-    accounts.push(multipleSelection.value[e].account)
-  }
-  console.log(accounts,typeof accounts)
-  axios.get('http://localhost:8081/manage/batchDelUser',{
-    params:{
-      accounts: JSON.stringify(accounts)
-    }
-  }).then((res)=>{
-    console.log(res.data)
-    if(res.data >= 1){
-      ElNotification({
-        title: '删除成功',
-        type: 'success',
-      })
-      pageCount()
-      pageChange()
-    }else{
-      ElNotification({
-        title: '删除失败',
-        message: '请重新尝试',
-        type: 'error',
-      })
-    }
-  })
+  // let accounts = []
+  // for (const e in multipleSelection.value) {
+  //   accounts.push(multipleSelection.value[e].account)
+  // }
+  // console.log(accounts,typeof accounts)
+  // axios.get('http://localhost:8081/manage/batchDelUser',{
+  //   params:{
+  //     accounts: JSON.stringify(accounts)
+  //   }
+  // }).then((res)=>{
+  //   console.log(res.data)
+  //   if(res.data >= 1){
+  //     ElNotification({
+  //       title: '删除成功',
+  //       type: 'success',
+  //     })
+  //     pageCount()
+  //     pageChange()
+  //   }else{
+  //     ElNotification({
+  //       title: '删除失败',
+  //       message: '请重新尝试',
+  //       type: 'error',
+  //     })
+  //   }
+  // })
 }
 //条件查询
 const conditionalSel = () => {
   // console.log(condition.select,condition.input)
-  order.load = true
+  ticket.load = true
   pageCount()
   pageChange()
 }
@@ -333,9 +312,10 @@ const add = (formEl: FormInstance | undefined) => {
   if (!formEl) return
   formEl.validate((valid) => {
     if (valid) {
-      axios.get('http://localhost:8081/register/addUser',{
+      axios.get('http://localhost:8081/ticket/add',{
         params:{
-          data: JSON.stringify(dialogDate2.value)
+          data: JSON.stringify(dialogDate2.value),
+          date: moment(dialogDate2.departure_time).format("YYYY-MM-DD")
         }
       }).then((res)=>{
         if(res.data == 1){

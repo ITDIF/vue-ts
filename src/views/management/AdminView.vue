@@ -33,7 +33,7 @@
             <el-menu-item>
               <el-icon><location /></el-icon>
               <template #title>
-                <span>Navigator One</span>
+                <span>首页</span>
               </template>
             </el-menu-item>
             <el-menu-item index="3">
@@ -57,6 +57,10 @@
               <el-menu-item index="cars"><el-icon><Van /></el-icon>车辆管理</el-menu-item>
               <el-menu-item index="users"><el-icon><User /></el-icon>用户管理</el-menu-item>
               <el-menu-item index="admins"><el-icon><Avatar /></el-icon>管理员</el-menu-item>
+            </el-sub-menu>
+            <el-sub-menu index="5">
+              <template #title><el-icon><Management /></el-icon>客户服务</template>
+              <el-menu-item index="customerServices"><el-icon><Connection /></el-icon>接待</el-menu-item>
             </el-sub-menu>
           </el-menu>
           <el-affix>

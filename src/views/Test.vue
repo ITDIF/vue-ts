@@ -26,14 +26,14 @@ const router = useRouter()
 let ws = null as any
 const store = useStore()
 console.log('account:',store.state.account)
-const post = () => {
-  router.push({
-    path: 't2',
-    params: {
-      op: 'post'
-    }
-  })
-}
+// const post = () => {
+//   router.push({
+//     path: 't2',
+//     params: {
+//       op: 'post'
+//     }
+//   })
+// }
 
 const dj = () => {
   // store.commit('increment')
