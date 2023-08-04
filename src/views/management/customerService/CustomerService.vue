@@ -34,13 +34,26 @@
       </div>
     </el-scrollbar>
   </div>
-  <el-divider/>
+  <el-divider style="margin: 12px 0 2px 0"/>
+  <div style="float: left;" >
+    <el-upload
+        style="float: left"
+        :show-file-list="false"
+        list-type="picture"
+        accept="#"
+        :on-change="fileChange"
+        :auto-upload="false"
+    >
+      <el-icon class="tool"><PictureFilled /></el-icon>
+    </el-upload>
+    <el-icon class="tool"><Microphone /></el-icon>
+  </div>
   <el-input
       v-model="msg.now"
       type="textarea"
       resize="none"
       autofocus
-      autosize
+      :autosize="{minRows: 3, maxRows: 8}"
       ref="msgInput"
       @keydown.enter.prevent="sendMsg()"
   />
@@ -57,6 +70,7 @@
 import {onMounted, onUnmounted, reactive, ref} from "vue";
 import moment from "moment";
 import {useStore} from "vuex";
+import axios from "axios";
 const msgInput = ref()
 const scrollbar = ref()
 const store = useStore()
@@ -74,7 +88,8 @@ const msg = reactive({
     {text: 2, url: '',time: moment().format('YYYY-MM-DD HH:mm:ss'),belong: 'user'},
     {text: 3, url: '',time: moment().format('YYYY-MM-DD HH:mm:ss'),belong: 'staff'}],
   now: '',
-  lastDate: ''
+  lastDate: '',
+  url: ''
 })
 const staff = reactive({
   online: false
@@ -92,8 +107,14 @@ const connectWebSocket = () => {
   if(connected) return
   ws = new WebSocket('ws://localhost:8081/customerService/'+store.state.admin)
   ws.onopen = () => {
+    connected = true;
+    reconnectAttempts = 0;
+    heartCheck.reset().start()
     console.log("WS连接成功"+moment().format('YYYY-MM-DD HH:mm:ss'));
   };
+  ws.onerror =()=>{
+    console.log('WS error!')
+  }
   ws.onmessage = (res: any) => {
     heartCheck.reset().start()
     if(res.data == 'pong'){
@@ -141,7 +162,15 @@ const isShowDate = (nowDate: string) => {
     return true
   }
 }
-
+const fileChange = async (uploadFile: any) => {
+  const formData = new FormData();
+  formData.append('file', uploadFile.raw);
+  const response = await axios.post('http://localhost:8081/utils/upload', formData);
+  msg.list.push({text: '', url: response.data, time: moment().format('YYYY-MM-DD HH:mm:ss'), belong: 'staff'})
+  ws.send(JSON.stringify({text: '', url: response.data,time: moment().format('YYYY-MM-DD HH:mm:ss'),
+    belong: 'staff',account:store.state.account,toPeo: 's123'}));
+  setTimeout(callback, 250);
+}
 // 心跳检测
 const heartCheck = {
   timeout: 5000,
@@ -217,6 +246,14 @@ const handleSelect = (key: string, keyPath: string[]) => {
 }
 .message img{
   width: 100px;
+}
+.tool{
+  font-size: 23px;
+  margin-left: 10px;
+}
+.tool :hover{
+  background-color: #F1F1F1;
+  cursor: pointer;
 }
 div:after, div:before {
   display: table;

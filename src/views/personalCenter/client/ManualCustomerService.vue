@@ -52,7 +52,7 @@
         <div style="height: 300px">
           <el-scrollbar ref="scrollbar" max-height="300px" always>
             <div v-for="i in msg.list" :key="i">
-              <div v-if="isShowDate(i.time)" class="message-time">
+              <div v-if="isShowDate()" class="message-time">
                 {{i.time}}
               </div>
               <div v-if="i.belong === 'user'" class="message">
@@ -120,10 +120,11 @@
 </template>
 
 <script lang="ts" setup>
-import {onMounted, onUnmounted, reactive, ref} from "vue";
+import {nextTick, onMounted, onUnmounted, reactive, ref} from "vue";
 import moment from "moment";
 import {useStore} from "vuex";
 import type { UploadFile } from 'element-plus'
+import axios from "axios";
 const msgInput = ref()
 const scrollbar = ref()
 const store = useStore()
@@ -142,8 +143,7 @@ const msg = reactive({
     {text: 2,url: '',time: moment().format('YYYY-MM-DD HH:mm:ss'),belong: 'user'},
     {text: 3,url: '',time: moment().format('YYYY-MM-DD HH:mm:ss'),belong: 'staff'}],
   now: '',
-  lastDate: '',
-  url: ''
+  lastDate: ''
 })
 const staff = reactive({
   online: false
@@ -176,6 +176,7 @@ const connectWebSocket = () => {
       // console.log('pong')
       return
     }
+    console.log(res.data)
     const obj = JSON.parse(res.data)
     msg.list.push({text: obj.text, url: obj.url, time: obj.time,belong: obj.belong})
     setTimeout(callback, 1);
@@ -199,7 +200,7 @@ onUnmounted(() => {
 const sendMsg = () => {
   // console.log('state',ws.readyState)
   if(msg.now == '') return
-  msg.list.push({text: msg.now, url: '', time: moment().format('YYYY-MM-DD HH:mm:ss'),belong: 'user'})
+  msg.list.push({text: msg.now, url: '',time: moment().format('YYYY-MM-DD HH:mm:ss'),belong: 'user'})
   ws.send(JSON.stringify({text: msg.now, url: '' as string, time: moment().format('YYYY-MM-DD HH:mm:ss'),
     belong: 'user',account:store.state.account,toPeo: 'admin'}));
   msg.now = ''
@@ -210,22 +211,28 @@ const callback = () =>{
 }
 
 const isShowDate = (nowDate: string) => {
-  // console.log('is ',moment().format('YYYY-MM-DD HH:mm:ss'))
+  // console.log('is ',moment('2023-08-03 14:48:00').diff(moment(),"seconds"))
+  let flag;
   if(msg.lastDate === ''){
-    msg.lastDate = nowDate
-    return true
+    flag = true
   }else{
-    console.log()
-    return true
+      if(moment(nowDate).diff(moment(msg.lastDate),"seconds") > 120){
+        flag = true
+      }else{
+        flag = false
+      }
   }
+  msg.lastDate = nowDate
+  return true
 }
-const fileChange = (uploadFile: UploadFile) => {
-  msg.url = uploadFile.url as string
-  msg.list.push({text: '', url: uploadFile.url as string, time: moment().format('YYYY-MM-DD HH:mm:ss'),belong: 'user'})
-  ws.send(JSON.stringify({text: msg.now, url: msg.url, time: moment().format('YYYY-MM-DD HH:mm:ss'),
+const fileChange = async (uploadFile: any) => {
+  const formData = new FormData();
+  formData.append('file', uploadFile.raw);
+  const response = await axios.post('http://localhost:8081/utils/upload', formData);
+  msg.list.push({text: '', url: response.data, time: moment().format('YYYY-MM-DD HH:mm:ss'), belong: 'user'})
+  ws.send(JSON.stringify({text: '', url: response.data, time: moment().format('YYYY-MM-DD HH:mm:ss'),
     belong: 'user',account:store.state.account,toPeo: 'admin'}));
-  msg.url = ''
-  setTimeout(callback, 20);
+  setTimeout(callback, 500);
 }
 
 

@@ -1,22 +1,28 @@
 <template>
-  <el-upload action="#" list-type="picture-card" :auto-upload="false" :on-change="change">
-    <el-icon><Plus /></el-icon>
-
-    <template #file="{ file }">
-      <div>
-        <img class="el-upload-list__item-thumbnail" :src="file.url" alt="" />
+  <div class="chat-box" ref="chatBox" @scroll="handleScroll">
+    <el-scrollbar>
+      <div class="chat-content">
+        1
+        <!-- 聊天内容 -->
       </div>
-    </template>
-  </el-upload>
+    </el-scrollbar>
+  </div>
 </template>
-<script lang="ts" setup>
-import { ref } from 'vue'
-import { Delete, Download, Plus, ZoomIn } from '@element-plus/icons-vue'
 
-import type { UploadFile } from 'element-plus'
+<script>
 
-
-const change = (uploadFile: any) =>{
-  console.log('change',uploadFile)
+export default {
+  methods: {
+    handleScroll() {
+      const chatBox = this.$refs.chatBox;
+      const contentHeight = chatBox.scrollHeight;
+      const scrollTop = chatBox.scrollTop;
+      const clientHeight = chatBox.clientHeight;
+      if (scrollTop + clientHeight >= contentHeight) {
+        // 滚动到底部
+        chatBox.scrollTop = contentHeight - clientHeight;
+      }
+    }
+  }
 }
 </script>

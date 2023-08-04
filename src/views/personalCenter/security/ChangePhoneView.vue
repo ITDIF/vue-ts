@@ -46,7 +46,7 @@
       <el-main>
         <el-card shadow="never" style="width: 82%; margin: auto;">
           <template #header>
-            密码修改
+            号码修改
           </template>
           <el-form
               ref="ruleFormRef"

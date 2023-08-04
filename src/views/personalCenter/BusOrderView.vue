@@ -382,6 +382,8 @@ const tabChange = () =>{
     pageCount('http://localhost:8081/order/queryNotTravelOrderCount')
     pageChange()
   }else{
+    date.value = []
+    input.value = ''
     selUrl.value = 'http://localhost:8081/order/queryHistoricalOrderPaging'
     pageCount('http://localhost:8081/order/queryHistoricalOrderCount')
     pageChange()
