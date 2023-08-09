@@ -6,17 +6,18 @@
             mode="horizontal"
             :ellipsis="false"
             active-text-color="none"
+            router
         >
-          <el-menu-item index="0">后台管理系统</el-menu-item>
+          <el-menu-item index="0" style="font-size: 20px"><b>后台管理系统</b></el-menu-item>
           <div class="flex-grow" />
           <el-menu-item index="1" style="height: auto;">
             <el-tooltip  content="全屏" placement="bottom">
               <el-icon style="margin: 0;"><FullScreen /></el-icon>
             </el-tooltip>
           </el-menu-item>
-          <el-sub-menu index="2">
+          <el-sub-menu index="sys">
             <template #title>个人中心</template>
-            <el-menu-item index="2-1"><el-icon><User /></el-icon>用户信息</el-menu-item>
+            <el-menu-item index="adminInformation"><el-icon><User /></el-icon>用户信息</el-menu-item>
             <el-menu-item index="2-2"><el-icon><Setting /></el-icon>用户设置</el-menu-item>
             <el-menu-item @click="quit"><el-icon><CloseBold /></el-icon>退出登录</el-menu-item>
           </el-sub-menu>
@@ -25,10 +26,11 @@
       <el-container>
         <el-aside width="{{isCollapse?0:'150px'}}">
           <el-menu
-              default-active="sys/order"
+              default-active="defaultActive"
               class="el-menu-vertical-demo"
               router
               :collapse="isCollapse"
+              @select="handleSelect"
           >
             <el-menu-item>
               <el-icon><location /></el-icon>
@@ -59,8 +61,12 @@
               <el-menu-item index="admins"><el-icon><Avatar /></el-icon>管理员</el-menu-item>
             </el-sub-menu>
             <el-sub-menu index="5">
-              <template #title><el-icon><Management /></el-icon>客户服务</template>
-              <el-menu-item index="customerServices"><el-icon><Connection /></el-icon>接待</el-menu-item>
+              <template #title>
+                <el-icon><Management /></el-icon>
+                <span>客户服务</span>
+              </template>
+              <el-menu-item index="customerLists"><el-icon><Connection /></el-icon>接待列表</el-menu-item>
+              <el-menu-item index="customerServices"><el-icon><ChatLineSquare /></el-icon>接待</el-menu-item>
             </el-sub-menu>
           </el-menu>
           <el-affix>
@@ -79,15 +85,15 @@
 </template>
 
 <script lang="ts" setup>
-import {ref} from "vue";
+import {onMounted, ref, watch} from "vue";
 import {ElMessage, ElMessageBox} from "element-plus";
 import {useStore} from "vuex";
 import {useRouter} from "vue-router";
 const store = useStore()
 const router = useRouter()
 const isCollapse = ref(false)
-
-
+const defaultActive = ref()
+const handle = ref()
 const quit = () => {
   ElMessageBox.confirm(
       '是否退出账户',
@@ -110,7 +116,15 @@ const quit = () => {
     })
   })
 }
+watch(defaultActive,(newValue, oldValue)=>{
+  console.log('watch ',oldValue,newValue)
+})
+const handleSelect = (key: string, keyPath: string[]) => {
+  console.log(key,handle.value)
+  defaultActive.value = key
 
+  // router.push(key)
+}
 </script>
 
 <style>

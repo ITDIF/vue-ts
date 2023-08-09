@@ -2,26 +2,29 @@
 <div id="app">
   <div class="w">
     <div class="logo">
-      <!--         <a href="">网 上 购 票 系 统</a>-->
+<!--               <a href="">网 上 购 票 系 统</a>-->
     </div>
   </div>
   <div class="content">
     <div class="login-box">
-      <h1>登 录</h1>
-      <el-form>
-        <el-form-item>
-          <el-input v-model="form.account" size="large" clearable placeholder="用户名/手机号" :prefix-icon="User"></el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-input v-model="form.password" type="password" show-password clearable size="large" placeholder="密码" :prefix-icon="Lock"></el-input>
-        </el-form-item>
-        <el-form-item style="margin-top: 25px">
-          <el-button type="primary" size="large" @click="onSubmit" round style="width: 90%;margin: 0 auto">登录</el-button>
-        </el-form-item>
-      </el-form>
+      <el-card shadow="never" style="width: 80%;padding-bottom: 20px">
+        <h1>登 录</h1>
+        <el-form>
+          <el-form-item>
+            <el-input v-model="form.account" size="large" clearable placeholder="用户名/手机号" :prefix-icon="User"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-input v-model="form.password" type="password" show-password clearable size="large" placeholder="密码" :prefix-icon="Lock"></el-input>
+          </el-form-item>
+          <el-form-item style="margin-top: 25px">
+            <el-button type="primary" size="large" @click="onSubmit" round style="width: 90%;margin: 0 auto">登录</el-button>
+          </el-form-item>
+        </el-form>
 
-      <a style="float: left" @click="register">立即注册</a>
-      <a style="float: right;">忘记密码</a>
+        <a style="float: left;cursor: pointer;" @click="register">立即注册</a>
+        <a style="float: right;cursor: pointer;" @click="router.push('/forgetPassword')">忘记密码</a>
+      </el-card>
+
     </div>
   </div>
 </div>
@@ -94,7 +97,7 @@ const register = () => {
 
 <style scoped>
 #app{
-  width: 20%;
+  width: 40%;
   margin: 0 auto;
   /*border: 1px solid #d2d3d2;*/
   /*border-radius: 4px;*/

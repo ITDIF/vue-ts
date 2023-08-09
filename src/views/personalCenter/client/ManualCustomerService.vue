@@ -52,7 +52,7 @@
         <div style="height: 300px">
           <el-scrollbar ref="scrollbar" max-height="300px" always>
             <div v-for="i in msg.list" :key="i">
-              <div v-if="isShowDate()" class="message-time">
+              <div v-if="i.isShow" class="message-time">
                 {{i.time}}
               </div>
               <div v-if="i.belong === 'user'" class="message">
@@ -64,7 +64,7 @@
                     {{ i.text }}
                   </template>
                   <template v-if="i.url != ''">
-                    <img :src="i.url">
+                    <el-image style="width: 100px;" :src="i.url" :preview-src-list="[i.url]" fit="cover"/>
                   </template>
                 </div>
               </div>
@@ -77,7 +77,7 @@
                     {{ i.text }}
                   </template>
                   <template v-if="i.url != ''">
-                    <img :src="i.url">
+                    <el-image style="width: 100px;" :src="i.url" :preview-src-list="[i.url]" fit="cover"/>
                   </template>
                 </div>
               </div>
@@ -120,7 +120,7 @@
 </template>
 
 <script lang="ts" setup>
-import {nextTick, onMounted, onUnmounted, reactive, ref} from "vue";
+import {nextTick, onBeforeUnmount, onMounted, onUnmounted, reactive, ref} from "vue";
 import moment from "moment";
 import {useStore} from "vuex";
 import type { UploadFile } from 'element-plus'
@@ -131,7 +131,7 @@ const store = useStore()
 let ws = null as any
 let connected = false;
 let reconnectAttempts = 0;
-const MAX_RECONNECT_ATTEMPTS = 10; // 最大重连次数
+const MAX_RECONNECT_ATTEMPTS = 5; // 最大重连次数
 const RECONNECT_INTERVAL = 5000; // 重连间隔时间，单位为毫秒
 
 const image = reactive({
@@ -139,9 +139,7 @@ const image = reactive({
   upload: ''
 })
 const msg = reactive({
-  list: [{text: '1',url: '',time: moment().format('YYYY-MM-DD HH:mm:ss'),belong: 'user'},
-    {text: 2,url: '',time: moment().format('YYYY-MM-DD HH:mm:ss'),belong: 'user'},
-    {text: 3,url: '',time: moment().format('YYYY-MM-DD HH:mm:ss'),belong: 'staff'}],
+  list: [{text: 'dddd',url: '',time: moment().format('YYYY-MM-DD HH:mm:ss'),belong: 'user',isShow: true}],
   now: '',
   lastDate: ''
 })
@@ -150,6 +148,18 @@ const staff = reactive({
 })
 
 onMounted(()=>{
+  axios.get('http://localhost:8081/utils/userMessage',{
+    params:{
+      listName: 'message-'+store.state.account
+    }
+  }).then((res)=>{
+    // console.log(res.data)
+    msg.list = res.data
+    for (const i in msg.list) {
+      msg.list[i].isShow = isShowDate(msg.list[i].time)
+    }
+    setTimeout(callback, 10);
+  })
   if('WebSocket' in window){
     console.log('浏览器支持WebSocket')
     connectWebSocket()
@@ -176,9 +186,9 @@ const connectWebSocket = () => {
       // console.log('pong')
       return
     }
-    console.log(res.data)
+    // console.log(res.data)
     const obj = JSON.parse(res.data)
-    msg.list.push({text: obj.text, url: obj.url, time: obj.time,belong: obj.belong})
+    msg.list.push({text: obj.text, url: obj.url, time: obj.time,belong: obj.belong,isShow: isShowDate(obj.time)})
     setTimeout(callback, 1);
   }
   ws.onclose = () => {
@@ -195,12 +205,14 @@ const connectWebSocket = () => {
 onUnmounted(() => {
   ws.close();
   heartCheck.reset()
+  reconnectAttempts = 10
 });
 
 const sendMsg = () => {
   // console.log('state',ws.readyState)
   if(msg.now == '') return
-  msg.list.push({text: msg.now, url: '',time: moment().format('YYYY-MM-DD HH:mm:ss'),belong: 'user'})
+  msg.list.push({text: msg.now, url: '',time: moment().format('YYYY-MM-DD HH:mm:ss'),
+    belong: 'user',isShow: isShowDate(moment().format('YYYY-MM-DD HH:mm:ss'))})
   ws.send(JSON.stringify({text: msg.now, url: '' as string, time: moment().format('YYYY-MM-DD HH:mm:ss'),
     belong: 'user',account:store.state.account,toPeo: 'admin'}));
   msg.now = ''
@@ -211,7 +223,7 @@ const callback = () =>{
 }
 
 const isShowDate = (nowDate: string) => {
-  // console.log('is ',moment('2023-08-03 14:48:00').diff(moment(),"seconds"))
+  // console.log('is ',moment(nowDate).diff(moment(msg.lastDate),"seconds"))
   let flag;
   if(msg.lastDate === ''){
     flag = true
@@ -223,13 +235,14 @@ const isShowDate = (nowDate: string) => {
       }
   }
   msg.lastDate = nowDate
-  return true
+  return flag
 }
 const fileChange = async (uploadFile: any) => {
   const formData = new FormData();
   formData.append('file', uploadFile.raw);
   const response = await axios.post('http://localhost:8081/utils/upload', formData);
-  msg.list.push({text: '', url: response.data, time: moment().format('YYYY-MM-DD HH:mm:ss'), belong: 'user'})
+  msg.list.push({text: '', url: response.data, time: moment().format('YYYY-MM-DD HH:mm:ss'),
+    belong: 'user',isShow: isShowDate(moment().format('YYYY-MM-DD HH:mm:ss'))})
   ws.send(JSON.stringify({text: '', url: response.data, time: moment().format('YYYY-MM-DD HH:mm:ss'),
     belong: 'user',account:store.state.account,toPeo: 'admin'}));
   setTimeout(callback, 500);
@@ -244,6 +257,8 @@ const heartCheck = {
   reset: function () {
     clearTimeout(this.timeoutObj);
     clearTimeout(this.serverTimeoutObj);
+    this.timeoutObj = null
+    this.serverTimeoutObj = null
     return this;
   },
   start: function () {

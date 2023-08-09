@@ -1,28 +1,31 @@
 <template>
-  <div class="chat-box" ref="chatBox" @scroll="handleScroll">
-    <el-scrollbar>
-      <div class="chat-content">
-        1
-        <!-- 聊天内容 -->
-      </div>
-    </el-scrollbar>
+  <div>
+    <button @mousedown="startSpeechRecognition">开始语音识别</button>
+    <p>{{ transcript }}</p>
   </div>
 </template>
 
 <script>
+import { ref } from 'vue';
 
 export default {
-  methods: {
-    handleScroll() {
-      const chatBox = this.$refs.chatBox;
-      const contentHeight = chatBox.scrollHeight;
-      const scrollTop = chatBox.scrollTop;
-      const clientHeight = chatBox.clientHeight;
-      if (scrollTop + clientHeight >= contentHeight) {
-        // 滚动到底部
-        chatBox.scrollTop = contentHeight - clientHeight;
-      }
-    }
+  setup() {
+    const transcript = ref('');
+
+    const startSpeechRecognition = () => {
+      const recognition = new window.webkitSpeechRecognition();
+
+      recognition.onresult = (event) => {
+        const result = event.results[0][0].transcript;
+        transcript.value = result;
+      };
+      console.log(recognition)
+      recognition.start();
+    };
+    return {
+      transcript,
+      startSpeechRecognition
+    };
   }
-}
+};
 </script>

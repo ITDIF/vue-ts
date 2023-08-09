@@ -56,6 +56,7 @@ import {onMounted, reactive, ref} from "vue";
 import axios from "axios";
 import moment from "moment";
 import router from "@/router";
+import {ElMessage} from "element-plus";
 
 const store = useStore()
 const user = reactive({
@@ -63,9 +64,7 @@ const user = reactive({
   dt: moment().format('a')
 })
 onMounted(()=>{
-  if(store.state.account == '000'){
-
-  }
+  loginCheck()
   axios.get('http://localhost:8081/login/gender',{
     params:{
       account: store.state.account
@@ -79,6 +78,16 @@ onMounted(()=>{
 const handleSelect = (key: string, keyPath: string[]) => {
   console.log(key)
   // router.push(store.state.route[key])
+}
+const loginCheck = () => {
+  if(store.state.account == '000'){
+    ElMessage({
+      message: '请先登录！',
+      type: 'warning',
+    })
+    router.push('/login')
+    return
+  }
 }
 </script>
 

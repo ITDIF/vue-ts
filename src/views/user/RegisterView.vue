@@ -39,6 +39,7 @@
             <el-input v-model="ruleForm.phone_number" clearable placeholder="手机号码"/>
           </el-form-item>
           <el-form-item>
+            <el-button @click="cancel">取消</el-button>
             <el-button type="primary" @click="submitForm(ruleFormRef)">
               注册
             </el-button>
@@ -144,7 +145,9 @@ const submitForm = (formEl: FormInstance | undefined) => {
     }
   })
 }
-
+const cancel = () => {
+  window.history.back()
+}
 const rules = reactive<FormRules>({
   account: [
     { required: true, message: '请输入用户名', trigger: 'blur' },

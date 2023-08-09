@@ -148,6 +148,7 @@ const tickets = reactive({
   pageData: [] as any
 })
 onMounted(()=>{
+  loginCheck()
   selTicket()
 })
 const selTicket = () => {
@@ -248,6 +249,16 @@ const disabledDate = (time: Date) => {
 const handleSelect = (key: string, keyPath: string[]) => {
   console.log(key)
   // router.push(store.state.route[key])
+}
+const loginCheck = () => {
+  if(store.state.account == '000'){
+    ElMessage({
+      message: '请先登录！',
+      type: 'warning',
+    })
+    router.push('/login')
+    return
+  }
 }
 </script>
 

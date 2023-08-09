@@ -338,6 +338,7 @@ const userInfo = reactive({
 
 const store = useStore()
 onBeforeMount(()=>{
+  loginCheck()
   tabOne()
 })
 const cancelOrder = (url: string) => {
@@ -519,6 +520,16 @@ const rebook = (e : any) => {
 
 const handleSelect = (key: string, keyPath: string[]) => {
   console.log(key)
+}
+const loginCheck = () => {
+  if(store.state.account == '000'){
+    ElMessage({
+      message: '请先登录！',
+      type: 'warning',
+    })
+    router.push('/login')
+    return
+  }
 }
 const pageFunction = ref(pageChange as any)
 </script>

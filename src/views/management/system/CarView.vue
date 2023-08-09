@@ -95,11 +95,18 @@
       <el-form-item label="车辆编号">
         <el-input v-model="dialogDate.car_number" clearable/>
       </el-form-item>
-      <el-form-item label="类型">
-        <el-input v-model="dialogDate.car_type" clearable/>
+      <el-form-item label="类型" prop="car_type">
+        <el-select v-model="dialogDate.car_type">
+          <el-option label="小型客车(小于10人)" value="小型客车"/>
+          <el-option label="中型客车(10到20人)" value="中型客车" />
+          <el-option label="大型客车(超过20人)" value="大型客车"/>
+        </el-select>
       </el-form-item>
-      <el-form-item label="席别">
-        <el-input v-model="dialogDate.seat_type" clearable/>
+      <el-form-item label="席别" prop="seat_type">
+        <el-select v-model="dialogDate.seat_type">
+          <el-option label="硬座" value="硬座"/>
+          <el-option label="软座" value="软座" />
+        </el-select>
       </el-form-item>
       <el-form-item label="载客量">
         <el-input v-model="dialogDate.passenger_capacity" clearable/>
@@ -134,10 +141,17 @@
         <el-input v-model="dialogDate2.car_number" clearable/>
       </el-form-item>
       <el-form-item label="类型" prop="car_type">
-        <el-input v-model="dialogDate2.car_type" clearable/>
+        <el-select v-model="dialogDate2.car_type">
+          <el-option label="小型客车(小于10人)" value="小型客车"/>
+          <el-option label="中型客车(10到20人)" value="中型客车" />
+          <el-option label="大型客车(超过20人)" value="大型客车"/>
+        </el-select>
       </el-form-item>
       <el-form-item label="席别" prop="seat_type">
-        <el-input v-model="dialogDate2.seat_type" clearable/>
+        <el-select v-model="dialogDate2.seat_type">
+          <el-option label="硬座" value="硬座"/>
+          <el-option label="软座" value="软座" />
+        </el-select>
       </el-form-item>
       <el-form-item label="载客量" prop="passenger_capacity">
         <el-input v-model="dialogDate2.passenger_capacity" clearable/>
@@ -265,6 +279,7 @@ const add = (formEl: FormInstance | undefined) => {
   if (!formEl) return
   formEl.validate((valid) => {
     if (valid) {
+      console.log(JSON.stringify(dialogDate2.value))
       axios.get('http://localhost:8081/manage/addCar',{
         params:{
           data: JSON.stringify(dialogDate2.value)

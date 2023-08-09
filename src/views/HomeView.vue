@@ -2,27 +2,30 @@
   <div class="common-layout">
     <el-container>
       <el-main style="margin: auto;">
-        <el-form
-            ref="formRef"
-            :model="form"
-            :rules="rules"
-            label-width="80px"
-            class="demo-ruleForm"
-            status-icon
-        >
-          <el-form-item label="出发地" prop="start">
-            <el-cascader :options='form.options' filterable :show-all-levels="false" v-model='form.start'></el-cascader>
-          </el-form-item>
-          <el-form-item label="到达地" prop="end">
-            <el-cascader :options='form.options' filterable :show-all-levels="false" v-model='form.end'></el-cascader>
-          </el-form-item>
-          <el-form-item label="出发日期" prop="date">
-            <el-date-picker v-model="form.date" value-format="YYYY-MM-DD" type="date" :disabled-date="disabledDate" placeholder="选择出发日期" />
-          </el-form-item>
-          <el-form-item label-width="0">
-            <el-button type="primary" style="margin: auto" @click="submit(formRef)">查询</el-button>
-          </el-form-item>
-        </el-form>
+        <el-card>
+          <el-form
+              ref="formRef"
+              :model="form"
+              :rules="rules"
+              label-width="80px"
+              class="demo-ruleForm"
+              status-icon
+          >
+            <el-form-item label="出发地" prop="start">
+              <el-cascader :options='form.options' filterable :show-all-levels="false" v-model='form.start'></el-cascader>
+            </el-form-item>
+            <el-form-item label="到达地" prop="end">
+              <el-cascader :options='form.options' filterable :show-all-levels="false" v-model='form.end'></el-cascader>
+            </el-form-item>
+            <el-form-item label="出发日期" prop="date">
+              <el-date-picker v-model="form.date" value-format="YYYY-MM-DD" type="date" :disabled-date="disabledDate" placeholder="选择出发日期" />
+            </el-form-item>
+            <el-form-item label-width="0">
+              <el-button type="primary" style="margin: auto" @click="submit(formRef)">查询</el-button>
+            </el-form-item>
+          </el-form>
+        </el-card>
+
       </el-main>
       <el-footer></el-footer>
     </el-container>

@@ -7,19 +7,20 @@
     </div>
     <div class="content">
       <div class="login-box">
-        <h1>管 理 员 登 录</h1>
-        <el-form>
-          <el-form-item>
-            <el-input v-model="form.account" size="large" clearable placeholder="用户名" :prefix-icon="User"></el-input>
-          </el-form-item>
-          <el-form-item>
-            <el-input v-model="form.password" type="password" show-password clearable size="large" placeholder="密码" :prefix-icon="Lock"></el-input>
-          </el-form-item>
-          <el-form-item style="margin-top: 25px">
-            <el-button type="primary" size="large" @click="onSubmit" round style="width: 90%;margin: 0 auto">登录</el-button>
-          </el-form-item>
-        </el-form>
-        <a style="float: right;">忘记密码</a>
+        <el-card shadow="never" style="width: 80%;">
+          <h1>管 理 员 登 录</h1>
+          <el-form>
+            <el-form-item>
+              <el-input v-model="form.account" size="large" clearable placeholder="用户名" :prefix-icon="User"></el-input>
+            </el-form-item>
+            <el-form-item>
+              <el-input v-model="form.password" type="password" show-password clearable size="large" placeholder="密码" :prefix-icon="Lock"></el-input>
+            </el-form-item>
+            <el-form-item style="margin-top: 25px">
+              <el-button type="primary" size="large" @click="onSubmit" round style="width: 90%;margin: 0 auto">登录</el-button>
+            </el-form-item>
+          </el-form>
+        </el-card>
       </div>
     </div>
   </div>
@@ -86,7 +87,7 @@ const onSubmit = () => {
 
 <style scoped>
 #app{
-  width: 20%;
+  width: 40%;
   margin: 0 auto;
   /*border: 1px solid #d2d3d2;*/
   /*border-radius: 4px;*/

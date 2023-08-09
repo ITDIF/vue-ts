@@ -118,6 +118,7 @@ import {onBeforeMount, onMounted, reactive, ref} from "vue";
 import axios from "axios";
 import moment from "moment";
 import {ElMessage, FormInstance, FormRules} from "element-plus";
+import router from "@/router";
 const dialogVisible = ref(false)
 const store = useStore()
 const ruleFormRef = ref<FormInstance>()
@@ -131,6 +132,7 @@ const contact = reactive({
   district: ''
 })
 onMounted(()=>{
+  loginCheck()
   axios.get('http://localhost:8081/login/userinfo',{
     params:{
       account: store.state.account
@@ -194,6 +196,13 @@ const handleClose = (formEl: FormInstance | undefined) => {
 const handleSelect = (key: string, keyPath: string[]) => {
   console.log(key)
   // router.push(store.state.route[key])
+}
+
+const loginCheck = () => {
+  if(store.state.account == '000'){
+    router.push('/login')
+    return
+  }
 }
 </script>
 

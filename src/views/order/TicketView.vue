@@ -125,6 +125,10 @@ const submit = (row: routeInfo) => {
   // console.log(codeToText[form.start[0]],codeToText[form.start[1]],codeToText[form.end[0]],codeToText[form.end[1]])
   // console.log('submit:',row)
   if(store.state.account == '000'){
+    ElMessage({
+      message: '请先登录！',
+      type: 'warning',
+    })
     router.push('/login')
     return
   }
@@ -162,6 +166,10 @@ const submit = (row: routeInfo) => {
 const candidate = (row : routeInfo) =>{
   // console.log('candidate:',row)
   if(store.state.account == '000'){
+    ElMessage({
+      message: '请先登录！',
+      type: 'warning',
+    })
     router.push('/login')
     return
   }
@@ -179,5 +187,6 @@ const candidate = (row : routeInfo) =>{
 const disabledDate = (time: Date) => {
   return time.getTime() < Date.now()-86400000 || time.getTime() > Date.now()+86400000*10
 }
+
 </script>
 

@@ -359,6 +359,7 @@ import {useStore} from "vuex";
 import {onBeforeMount, onMounted, reactive, ref} from "vue";
 import axios from "axios";
 import moment from "moment";
+import router from "@/router";
 import {ElMessage} from "element-plus";
 const tabName = ref('0')
 const dialogVisible = ref(false)
@@ -383,6 +384,7 @@ const userInfo = reactive({
 
 const store = useStore()
 onBeforeMount(()=>{
+  loginCheck()
   tabOne()
 })
 const cancelOrder = (url: string) => {
@@ -596,6 +598,16 @@ const changeDeadline = () => {
 
 const handleSelect = (key: string, keyPath: string[]) => {
   console.log(key)
+}
+const loginCheck = () => {
+  if(store.state.account == '000'){
+    ElMessage({
+      message: '请先登录！',
+      type: 'warning',
+    })
+    router.push('/login')
+    return
+  }
 }
 const pageFunction = ref(pageChange as any)
 </script>

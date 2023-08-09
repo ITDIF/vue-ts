@@ -141,6 +141,11 @@ const routes = [
     component: () => import('../views/personalCenter/security/ChangeEmailView.vue')
   },
   {
+    path:'/forgetPassword',
+    name:'ForgetPassword',
+    component: () => import('../views/user/ForgetPasswordView.vue')
+  },
+  {
     path:'/changePasswordView',
     name:'ChangePasswordView',
     component: () => import('../views/personalCenter/security/ChangePasswordView.vue')
