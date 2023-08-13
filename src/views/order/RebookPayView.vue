@@ -51,7 +51,7 @@
             @click="onlinePayment"
         >立刻改签</el-button>
       </el-main>
-      <el-footer>Footer</el-footer>
+      <el-footer></el-footer>
     </el-container>
   </div>
   <el-dialog

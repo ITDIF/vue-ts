@@ -9,7 +9,7 @@
           style="margin-bottom: 10px"
       >
         <template #prepend>
-          <el-select v-model="condition.select" placeholder="请选择" style="width: 85px" clearable>
+          <el-select v-model="condition.select" placeholder="请选择" style="width: 100px" clearable>
             <el-option label="车辆编号" value="car_number" />
             <el-option label="类型" value="car_type" />
             <el-option label="席别" value="seat_type" />
@@ -210,14 +210,14 @@ const pageCount = () => {
       value: condition.input
     }
   }).then((res)=>{
-    // console.log(res.data)
+    console.log(res.data)
     pagination.total = res.data
   })
 }
 
 //分页
 const pageChange = () =>{
-  // console.log('第 ',currentPage.value,'页')
+  // console.log('第 ',pagination.currentPage,'页')
   axios.get('http://localhost:8081/manage/queryCarPaging',{
     params:{
       start: (pagination.currentPage - 1) * pagination.pageSize,
@@ -228,7 +228,7 @@ const pageChange = () =>{
   }).then((res)=>{
     // console.log(res.data)
     car.data = res.data
-    if(pagination.currentPage != 0 && car.data.length == 0){
+    if(pagination.currentPage != 1 && car.data.length == 0){
       pagination.currentPage--
       pageChange()
     }
@@ -244,7 +244,7 @@ const batchDel = () =>{
   for (const e in multipleSelection.value) {
     carNumbers.push(multipleSelection.value[e].car_number)
   }
-  console.log(carNumbers)
+  // console.log(carNumbers)
   axios.get('http://localhost:8081/manage/batchDelCar',{
     params:{
       carNumbers: JSON.stringify(carNumbers)
@@ -270,6 +270,7 @@ const batchDel = () =>{
 //条件查询
 const conditionalSel = () => {
   // console.log(condition.select,condition.input)
+  pagination.currentPage = 1
   car.load = true
   pageCount()
   pageChange()

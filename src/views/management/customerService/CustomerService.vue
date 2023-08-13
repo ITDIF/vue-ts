@@ -1,7 +1,7 @@
 <template>
   <el-text style="float: left">
     用户
-    <el-icon v-if="!staff.online" class="is-loading"><Loading/></el-icon>
+<!--    <el-icon v-if="!staff.online" class="is-loading"><Loading/></el-icon>-->
   </el-text>
   <el-divider/>
   <div style="height: 300px">
@@ -169,7 +169,7 @@ const sendMsg = () => {
   setTimeout(callback, 1);
 }
 const callback = () =>{
-  scrollbar.value.setScrollTop(99999)
+  scrollbar.value?.setScrollTop(99999)
 }
 
 const isShowDate = (nowDate: string) => {

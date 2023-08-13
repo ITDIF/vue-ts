@@ -258,7 +258,7 @@ const pageChange = () =>{
   }).then((res)=>{
     // console.log(res.data)
     ticket.data = res.data
-    if(pagination.currentPage != 0 && ticket.data.length == 0){
+    if(pagination.currentPage != 1 && ticket.data.length == 0){
       pagination.currentPage--
       pageChange()
     }

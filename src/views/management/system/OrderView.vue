@@ -282,7 +282,7 @@ const pageChange = () =>{
   }).then((res)=>{
     // console.log(res.data)
     order.data = res.data
-    if(pagination.currentPage != 0 && order.data.length == 0){
+    if(pagination.currentPage != 1 && order.data.length == 0){
       pagination.currentPage--
       pageChange()
     }

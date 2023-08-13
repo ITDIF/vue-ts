@@ -30,10 +30,10 @@
           </el-sub-menu>
           <el-sub-menu index="5">
             <template #title>
-              <span>投诉与建议</span>
+              <span>团购服务</span>
             </template>
-            <el-menu-item index="5-1">投诉</el-menu-item>
-            <el-menu-item index="5-2">建议</el-menu-item>
+            <el-menu-item index="charteredBusView">包车服务</el-menu-item>
+            <el-menu-item index="myCharteredBusView">我的</el-menu-item>
           </el-sub-menu>
           <el-sub-menu index="6">
             <template #title>
@@ -132,13 +132,13 @@ const contact = reactive({
   district: ''
 })
 onMounted(()=>{
-  loginCheck()
+  if(!loginCheck()) return
   axios.get('http://localhost:8081/login/userinfo',{
     params:{
       account: store.state.account
     }
   }).then((res)=>{
-    console.log(store.state.account,res.data)
+    // console.log(store.state.account,res.data)
     user.info = res.data
   })
 })
@@ -200,9 +200,14 @@ const handleSelect = (key: string, keyPath: string[]) => {
 
 const loginCheck = () => {
   if(store.state.account == '000'){
+    ElMessage({
+      message: '请先登录！',
+      type: 'warning',
+    })
     router.push('/login')
-    return
+    return false
   }
+  return true
 }
 </script>
 

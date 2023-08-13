@@ -30,10 +30,10 @@
           </el-sub-menu>
           <el-sub-menu index="5">
             <template #title>
-              <span>投诉与建议</span>
+              <span>团购服务</span>
             </template>
-            <el-menu-item index="5-1">投诉</el-menu-item>
-            <el-menu-item index="5-2">建议</el-menu-item>
+            <el-menu-item index="charteredBusView">包车服务</el-menu-item>
+            <el-menu-item index="myCharteredBusView">我的</el-menu-item>
           </el-sub-menu>
           <el-sub-menu index="6">
             <template #title>
@@ -46,7 +46,7 @@
       <el-main>
         <el-text style="float: left">
           人工客服
-          <el-icon v-if="!staff.online" class="is-loading"><Loading/></el-icon>
+<!--          <el-icon v-if="!staff.online" class="is-loading"><Loading/></el-icon>-->
         </el-text>
         <el-divider/>
         <div style="height: 300px">
@@ -125,6 +125,8 @@ import moment from "moment";
 import {useStore} from "vuex";
 import type { UploadFile } from 'element-plus'
 import axios from "axios";
+import {ElMessage} from "element-plus";
+import router from "@/router";
 const msgInput = ref()
 const scrollbar = ref()
 const store = useStore()
@@ -219,7 +221,7 @@ const sendMsg = () => {
   setTimeout(callback, 1);
 }
 const callback = () =>{
-  scrollbar.value.setScrollTop(99999)
+  scrollbar.value?.setScrollTop(99999)
 }
 
 const isShowDate = (nowDate: string) => {
@@ -279,6 +281,17 @@ const heartCheck = {
 const handleSelect = (key: string, keyPath: string[]) => {
   console.log(key)
   // router.push(store.state.route[key])
+}
+const loginCheck = () => {
+  if(store.state.account == '000'){
+    ElMessage({
+      message: '请先登录！',
+      type: 'warning',
+    })
+    router.push('/login')
+    return false
+  }
+  return true
 }
 </script>
 

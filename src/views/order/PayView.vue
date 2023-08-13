@@ -49,7 +49,7 @@
             @click="onlinePayment"
         >网上支付</el-button>
       </el-main>
-      <el-footer>Footer</el-footer>
+      <el-footer></el-footer>
     </el-container>
   </div>
   <el-dialog

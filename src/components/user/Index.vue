@@ -36,18 +36,24 @@
       <el-menu-item index="candidateOrderView">候补订单</el-menu-item>
     </el-sub-menu>
     <el-menu-item index="personalTicketView">车票</el-menu-item>
-    <el-menu-item>团购服务</el-menu-item>
-    <el-menu-item>包车服务</el-menu-item>
     <el-sub-menu index="3">
+      <template #title>团购服务</template>
+      <el-menu-item index="charteredBusView">包车服务</el-menu-item>
+    </el-sub-menu>
+    <el-sub-menu index="4">
       <template #title>客户服务</template>
       <el-menu-item index="customerService">人工客服</el-menu-item>
     </el-sub-menu>
-    <el-sub-menu  index="4">
+    <el-sub-menu index="5">
       <template #title>其他</template>
       <el-menu-item index="/adminLogin">管理员登录</el-menu-item>
     </el-sub-menu>
   </el-menu>
   <router-view/>
+  <el-footer>
+    <el-divider/>
+    <el-text>版权所有©2023-2024 新余学院 20计科一班 高杰</el-text>
+  </el-footer>
 </template>
 
 <script lang="ts" setup>

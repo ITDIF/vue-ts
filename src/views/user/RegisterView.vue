@@ -118,13 +118,6 @@ const submitForm = (formEl: FormInstance | undefined) => {
       let data = JSON.stringify(ruleForm)
       axios.get('http://localhost:8081/register/addUser',{
         params:{
-          // account: ruleForm.account,
-          // password: ruleForm.password,
-          // idType: ruleForm.id_type,
-          // name: ruleForm.username,
-          // id: ruleForm.id_number,
-          // email: ruleForm.email,
-          // number: ruleForm.phone_number,
           data: data
         }
       }).then((res)=>{

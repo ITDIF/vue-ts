@@ -1,31 +1,69 @@
 <template>
   <div class="common-layout">
     <el-container>
-      <el-main style="margin: auto;">
-        <el-card>
-          <el-form
-              ref="formRef"
-              :model="form"
-              :rules="rules"
-              label-width="80px"
-              class="demo-ruleForm"
-              status-icon
+      <el-main>
+        <el-carousel :interval="5000" arrow="never" style="position: relative;">
+          <el-carousel-item v-for="item in 4" :key="item">
+            <h3 text="2xl" justify="center">{{ item }}</h3>
+          </el-carousel-item>
+          <el-card
+              style="background-color: #ffffff;
+              width: 30%;
+              position: absolute;
+              z-index: 1;
+              top: 20px;
+              left: 20px"
           >
-            <el-form-item label="出发地" prop="start">
-              <el-cascader :options='form.options' filterable :show-all-levels="false" v-model='form.start'></el-cascader>
-            </el-form-item>
-            <el-form-item label="到达地" prop="end">
-              <el-cascader :options='form.options' filterable :show-all-levels="false" v-model='form.end'></el-cascader>
-            </el-form-item>
-            <el-form-item label="出发日期" prop="date">
-              <el-date-picker v-model="form.date" value-format="YYYY-MM-DD" type="date" :disabled-date="disabledDate" placeholder="选择出发日期" />
-            </el-form-item>
-            <el-form-item label-width="0">
-              <el-button type="primary" style="margin: auto" @click="submit(formRef)">查询</el-button>
-            </el-form-item>
-          </el-form>
-        </el-card>
-
+            <div style="margin-bottom: 10px"><b style="font-size: 20px">车票</b></div>
+            <el-form
+                ref="formRef"
+                :model="form"
+                :rules="rules"
+                label-width="80px"
+                class="demo-ruleForm"
+                status-icon
+            >
+              <el-form-item label="出发地" prop="start">
+                <el-cascader :options='form.options' filterable :show-all-levels="false" v-model='form.start'></el-cascader>
+              </el-form-item>
+              <el-form-item label="到达地" prop="end">
+                <el-cascader :options='form.options' filterable :show-all-levels="false" v-model='form.end'></el-cascader>
+              </el-form-item>
+              <el-form-item label="出发日期" prop="date">
+                <el-date-picker v-model="form.date" value-format="YYYY-MM-DD" type="date" :disabled-date="disabledDate" placeholder="选择出发日期" />
+              </el-form-item>
+              <el-form-item label-width="0">
+                <el-button type="primary" style="margin: auto" @click="submit(formRef)">查询</el-button>
+              </el-form-item>
+            </el-form>
+          </el-card>
+        </el-carousel>
+        <el-row style="margin-top: 40px">
+          <el-col :span="4" :offset="1" class="row-col" @click=submit(formRef)>
+            <div class="div-icon">
+              <el-icon style="margin: auto" size="40px"><Ticket /></el-icon>
+              <el-text style="font-size: 16px">车票预订</el-text>
+            </div>
+          </el-col>
+          <el-col :span="4" :offset="2" class="row-col" @click="router.push('/personalTicketView')">
+            <div class="div-icon">
+              <el-icon style="margin: auto" size="40px"><Tickets /></el-icon>
+              <el-text style="font-size: 16px">我的车票</el-text>
+            </div>
+          </el-col>
+          <el-col :span="4" :offset="2" class="row-col" @click="router.push('/customerService')">
+            <div class="div-icon">
+              <el-icon style="margin: auto" size="40px"><ChatDotRound /></el-icon>
+              <el-text style="font-size: 16px">人工客服</el-text>
+            </div>
+          </el-col>
+          <el-col :span="4" :offset="2" class="row-col" @click="router.push('/personalCenterView')">
+            <div class="div-icon">
+              <el-icon style="margin: auto" size="40px"><UserFilled /></el-icon>
+              <el-text style="font-size: 16px">个人中心</el-text>
+            </div>
+          </el-col>
+        </el-row>
       </el-main>
       <el-footer></el-footer>
     </el-container>
@@ -114,3 +152,32 @@ onMounted(()=>{
 })
 
 </script>
+
+<style scoped>
+.el-carousel__item h3 {
+  color: #475669;
+  opacity: 0.75;
+  line-height: 300px;
+  margin: 0;
+  text-align: center;
+}
+
+.el-carousel__item:nth-child(2n) {
+  background-color: #99a9bf;
+}
+
+.el-carousel__item:nth-child(2n + 1) {
+  background-color: #d3dce6;
+}
+.div-icon{
+  background-color: #F5F5F5;
+  height: 130px;
+  margin: auto;
+  display: grid;
+  border-radius: 5px;
+}
+.row-col :hover{
+  background-color: #5ca4e7;
+  cursor: pointer;
+}
+</style>

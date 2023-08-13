@@ -53,7 +53,7 @@
   >
     <el-table-column type="selection" width="35" />
     <el-table-column label="账号" prop="account" width="100"/>
-    <el-table-column label="密码" prop="password" width="100"/>
+<!--    <el-table-column label="密码" prop="password" width="100"/>-->
     <el-table-column label="姓名" prop="username"/>
     <el-table-column label="电话" prop="phone_number" width="120"/>
     <el-table-column label="证件类型" prop="id_type" width="150"/>
@@ -100,9 +100,9 @@
       <el-form-item label="账号">
         <el-input disabled v-model="dialogDate.account"/>
       </el-form-item>
-      <el-form-item label="密码">
-        <el-input v-model="dialogDate.password" clearable/>
-      </el-form-item>
+<!--      <el-form-item label="密码">-->
+<!--        <el-input v-model="dialogDate.password" clearable/>-->
+<!--      </el-form-item>-->
       <el-form-item label="姓名">
         <el-input v-model="dialogDate.username" clearable/>
       </el-form-item>
@@ -249,7 +249,7 @@ const pageChange = () =>{
   }).then((res)=>{
     // console.log(res.data)
     user.data = res.data
-    if(pagination.currentPage != 0 && user.data.length == 0){
+    if(pagination.currentPage != 1 && user.data.length == 0){
       pagination.currentPage--
       pageChange()
     }

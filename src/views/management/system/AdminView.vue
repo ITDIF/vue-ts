@@ -49,7 +49,7 @@
   >
     <el-table-column type="selection" width="35" />
     <el-table-column label="账号" prop="account" width="100"/>
-    <el-table-column label="密码" prop="password" width="100"/>
+<!--    <el-table-column label="密码" prop="password" width="100"/>-->
     <el-table-column label="姓名" prop="username"/>
     <el-table-column label="手机号" prop="phone_number" width="120"/>
     <el-table-column label="证件类型" prop="id_type" width="130"/>

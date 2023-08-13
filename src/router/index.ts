@@ -136,6 +136,16 @@ const routes = [
     component: () => import('../views/personalCenter/AccountSecurityView.vue')
   },
   {
+    path:'/charteredBusView',
+    name:'CharteredBusView',
+    component: () => import('../views/personalCenter/groupBuying/CharteredBusView.vue')
+  },
+  {
+    path:'/myCharteredBusView',
+    name:'MyCharteredBusView',
+    component: () => import('../views/personalCenter/groupBuying/MyCharteredBusView.vue')
+  },
+  {
     path:'/changeEmailView',
     name:'ChangeEmailView',
     component: () => import('../views/personalCenter/security/ChangeEmailView.vue')

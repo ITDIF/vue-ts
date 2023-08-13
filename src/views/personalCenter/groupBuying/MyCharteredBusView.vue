@@ -3,8 +3,9 @@
     <el-container>
       <el-aside width="120" style="margin-left: 3%">
         <el-menu
-            default-active="personalCenterView"
+            default-active="myCharteredBusView"
             router
+            :default-openeds="['5']"
             @select="handleSelect"
         >
           <el-menu-item index="personalCenterView">
@@ -43,8 +44,40 @@
         </el-menu>
       </el-aside>
       <el-main>
-        <el-text size="large" tag="b">{{store.state.username}}</el-text>
-         {{user.gender}}，{{user.dt}}好！
+        <el-breadcrumb separator="/" style="margin-bottom: 10px">
+          <el-breadcrumb-item><b>团购服务</b></el-breadcrumb-item>
+          <el-breadcrumb-item>我的</el-breadcrumb-item>
+        </el-breadcrumb>
+        <el-empty v-if="myCharteredBus.data.length === 0" description="您还没有包车哦～" />
+        <div v-for="e in myCharteredBus.data">
+          <el-row>
+            <el-col :span="8">
+              <el-text>{{e.start_time}} 至 {{e.end_time}}（{{moment(e.end_time).diff(moment(e.start_time),'days')+1}}天）</el-text>
+            </el-col>
+          </el-row>
+          <el-card style="margin-bottom: 20px">
+            <el-row>
+              <el-col :span="4">
+                <el-text>车辆编号：</el-text>{{e.car_number}}
+              </el-col>
+              <el-col :span="2">{{e.car_type}}</el-col>
+              <el-col :span="2">{{e.seat_type}}</el-col>
+              <el-col :span="2">核载{{e.passenger_capacity}}人</el-col>
+              <el-col :span="2">{{e.cost}}元</el-col>
+              <el-col :span="10">
+                <el-text>用途：</el-text>{{e.notes}}
+              </el-col>
+              <el-col :span="2">
+                <el-popconfirm title="确定要删除吗？" @confirm="del(e.car_number)">
+                  <template #reference>
+                    <el-button type="danger">删除</el-button>
+                  </template>
+                </el-popconfirm>
+              </el-col>
+            </el-row>
+          </el-card>
+        </div>
+
       </el-main>
     </el-container>
   </div>
@@ -56,25 +89,48 @@ import {onBeforeMount, onMounted, reactive, ref} from "vue";
 import axios from "axios";
 import moment from "moment";
 import router from "@/router";
-import {ElMessage} from "element-plus";
+import {ElMessage, ElNotification} from "element-plus";
 
 const store = useStore()
-const user = reactive({
-  gender: '先生',
-  dt: moment().format('a')
+const myCharteredBus = reactive({
+  data: [] as any
 })
 onMounted(()=>{
   if(!loginCheck()) return
-  axios.get('http://localhost:8081/login/gender',{
+  myCharteredBusInit()
+})
+const myCharteredBusInit = () => {
+  axios.get('http://localhost:8081/car/queryCharteredBusInfo',{
     params:{
       account: store.state.account
     }
   }).then((res)=>{
-    if(res.data == 0){
-      user.gender = '女士'
+    console.log(res.data)
+    myCharteredBus.data = res.data
+  })
+}
+
+const del = (carNumber: string) => {
+  axios.get('http://localhost:8081/car/delCharteredBus',{
+    params:{
+      carNumber: carNumber
+    }
+  }).then((res)=>{
+    if(res.data == 1){
+      ElNotification({
+        title: '删除成功',
+        type: 'success',
+      })
+      myCharteredBusInit()
+    }else{
+      ElNotification({
+        title: '删除失败',
+        message: '请重新尝试',
+        type: 'error',
+      })
     }
   })
-})
+}
 
 const handleSelect = (key: string, keyPath: string[]) => {
   console.log(key)
@@ -94,5 +150,7 @@ const loginCheck = () => {
 </script>
 
 <style scoped>
-
+.el-main{
+  padding-top: 2px;
+}
 </style>

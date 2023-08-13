@@ -30,10 +30,10 @@
           </el-sub-menu>
           <el-sub-menu index="5">
             <template #title>
-              <span>投诉与建议</span>
+              <span>团购服务</span>
             </template>
-            <el-menu-item index="5-1">投诉</el-menu-item>
-            <el-menu-item index="5-2">建议</el-menu-item>
+            <el-menu-item index="charteredBusView">包车服务</el-menu-item>
+            <el-menu-item index="myCharteredBusView">我的</el-menu-item>
           </el-sub-menu>
           <el-sub-menu index="6">
             <template #title>
@@ -338,7 +338,7 @@ const userInfo = reactive({
 
 const store = useStore()
 onBeforeMount(()=>{
-  loginCheck()
+  if(!loginCheck()) return
   tabOne()
 })
 const cancelOrder = (url: string) => {
@@ -528,8 +528,9 @@ const loginCheck = () => {
       type: 'warning',
     })
     router.push('/login')
-    return
+    return false
   }
+  return true
 }
 const pageFunction = ref(pageChange as any)
 </script>

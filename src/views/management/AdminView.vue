@@ -8,9 +8,9 @@
             active-text-color="none"
             router
         >
-          <el-menu-item index="0" style="font-size: 20px"><b>后台管理系统</b></el-menu-item>
+          <el-menu-item style="font-size: 20px" @click="router.go(0)"><b>后台管理系统</b></el-menu-item>
           <div class="flex-grow" />
-          <el-menu-item index="1" style="height: auto;">
+          <el-menu-item style="height: auto;">
             <el-tooltip  content="全屏" placement="bottom">
               <el-icon style="margin: 0;"><FullScreen /></el-icon>
             </el-tooltip>
@@ -18,7 +18,7 @@
           <el-sub-menu index="sys">
             <template #title>个人中心</template>
             <el-menu-item index="adminInformation"><el-icon><User /></el-icon>用户信息</el-menu-item>
-            <el-menu-item index="2-2"><el-icon><Setting /></el-icon>用户设置</el-menu-item>
+            <el-menu-item><el-icon><Setting /></el-icon>用户设置</el-menu-item>
             <el-menu-item @click="quit"><el-icon><CloseBold /></el-icon>退出登录</el-menu-item>
           </el-sub-menu>
         </el-menu>
@@ -37,10 +37,6 @@
               <template #title>
                 <span>首页</span>
               </template>
-            </el-menu-item>
-            <el-menu-item index="3">
-              <el-icon><document /></el-icon>
-              <template #title>Navigator</template>
             </el-menu-item>
             <el-sub-menu index="sys">
               <template #title>
@@ -89,6 +85,7 @@ import {onMounted, ref, watch} from "vue";
 import {ElMessage, ElMessageBox} from "element-plus";
 import {useStore} from "vuex";
 import {useRouter} from "vue-router";
+import {Plus} from "@element-plus/icons-vue";
 const store = useStore()
 const router = useRouter()
 const isCollapse = ref(false)

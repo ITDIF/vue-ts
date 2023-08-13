@@ -9,7 +9,7 @@
           style="margin-bottom: 10px"
       >
         <template #prepend>
-          <el-select v-model="condition.select" placeholder="请选择" style="width: 85px" clearable>
+          <el-select v-model="condition.select" placeholder="请选择" style="width: 100px" clearable>
             <el-option label="车次" value="route_number" />
             <el-option label="车辆编号" value="car_number" />
             <el-option label="起点" value="from_station" />
@@ -35,7 +35,7 @@
       </el-popconfirm>
     </el-col>
     <el-col :span="2">
-      <el-button type="success" @click="dialogVisible2=true;dialogDate2={}">添加</el-button>
+      <el-button type="success" @click="dialogVisible2=true;dialogDate2={};notUseCar()">添加</el-button>
     </el-col>
     <el-col :span="1">
       <el-button type="info" @click="refresh">刷新</el-button>
@@ -146,7 +146,8 @@
         <el-input v-model="dialogDate2.route_number" clearable/>
       </el-form-item>
       <el-form-item label="车辆编号" prop="car_number">
-        <el-input v-model="dialogDate2.car_number" clearable/>
+<!--        <el-input v-model="dialogDate2.car_number" clearable/>-->
+        <el-cascader :options='options' filterable v-model='dialogDate2.car_number'></el-cascader>
       </el-form-item>
       <el-form-item label="起点" prop="from_station">
         <el-input v-model="dialogDate2.from_station" clearable/>
@@ -179,21 +180,23 @@
 </template>
 
 <script lang="ts" setup>
-import {onMounted, reactive, ref} from "vue";
+import {onMounted, reactive, ref, watch} from "vue";
 import axios from "axios";
 import moment from "moment";
 import { Search } from '@element-plus/icons-vue'
 import router from "@/router";
 import {ElNotification, FormInstance, FormRules} from "element-plus";
+import {pcaTextArr, pcTextArr} from 'element-china-area-data'
 const multipleSelection = ref([] as any)
 const ruleFormRef = ref<FormInstance>()
 const dialogVisible = ref(false)
 const dialogVisible2 = ref(false)
 const dialogDate = ref({})
 const dialogDate2 = ref({} as any)
+const options = ref([{label: '1',value: '2'}])
 const carRoute = reactive({
   data: [],
-  load: true
+  load: true,
 })
 const pagination = reactive({
   currentPage: 1,
@@ -204,7 +207,6 @@ const condition = reactive({
   input: '',
   select: ''
 })
-
 onMounted(()=>{
   pageCount()
   pageChange()
@@ -217,13 +219,18 @@ const pageCount = () => {
       value: condition.input
     }
   }).then((res)=>{
-    // console.log(res.data)
+    console.log(res.data)
     pagination.total = res.data
   })
 }
 
 //分页
 const pageChange = () =>{
+  // if(pagination.total == 0) {
+  //   carRoute.load = false
+  //   return
+  // }
+  console.log('第 ',pagination.currentPage,'页',carRoute.data.length)
   axios.get('http://localhost:8081/route/queryCarRoutePaging',{
     params:{
       start: (pagination.currentPage - 1) * pagination.pageSize,
@@ -234,7 +241,7 @@ const pageChange = () =>{
   }).then((res)=>{
     // console.log(res.data)
     carRoute.data = res.data
-    if(pagination.currentPage != 0 && carRoute.data.length == 0){
+    if(pagination.currentPage != 1 && res.data.length == 0){
       pagination.currentPage--
       pageChange()
     }
@@ -280,11 +287,25 @@ const conditionalSel = () => {
   pageCount()
   pageChange()
 }
+//未使用车辆
+const notUseCar = () =>{
+  console.log(typeof pcTextArr[0])
+  options.value = []
+  axios.get('http://localhost:8081/manage/notUseCar').then((res)=>{
+    console.log(res.data[0])
+    for (const i in res.data) {
+      let e = res.data[i]
+      options.value.push({label: e, value: e});
+    }
+  })
+  console.log(options.value)
+}
 //添加
 const add = (formEl: FormInstance | undefined) => {
   if (!formEl) return
   formEl.validate((valid) => {
     if (valid) {
+      dialogDate2.value.car_number = dialogDate2.value.car_number[0]
       axios.get('http://localhost:8081/route/add',{
         params:{
           data: JSON.stringify(dialogDate2.value)
