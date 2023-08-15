@@ -35,8 +35,8 @@ import type { FormInstance } from 'element-plus'
 import { ElMessage } from 'element-plus'
 import {useStore} from "vuex";
 const form = reactive({
-  account: 'admin',
-  password: 'admin',
+  account: '',
+  password: '',
   error: ''
 })
 const store = useStore()
@@ -67,7 +67,7 @@ const onSubmit = () => {
         type: 'success',
       })
       store.commit('changeAdmin',form.account)
-      router.push('/sys/orders')
+      router.push('/sys/homes')
     }else if(res.data == -1){
       ElMessage({
         showClose: true,

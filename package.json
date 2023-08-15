@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.1.0",
+    "@types/dom-mediacapture-record": "^1.0.16",
     "axios": "^1.4.0",
     "core-js": "^3.8.3",
     "element-china-area-data": "^6.0.0",
@@ -20,11 +21,14 @@
     "vue": "^3.2.13",
     "vue-class-component": "^8.0.0-0",
     "vue-router": "^4.0.3",
+    "vue-speech-recognition": "^0.2.1",
     "vuex": "^4.0.0",
-    "vuex-along": "^1.2.13"
+    "vuex-along": "^1.2.13",
+    "webaudio": "^1.0.1"
   },
   "devDependencies": {
     "@types/jspdf": "^2.0.0",
+    "@types/recorder-js": "^1.0.2",
     "@vue/cli-plugin-babel": "~5.0.0",
     "@vue/cli-plugin-router": "~5.0.0",
     "@vue/cli-plugin-typescript": "~5.0.0",

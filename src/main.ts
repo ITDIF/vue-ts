@@ -5,6 +5,8 @@ import store from './store'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
+// @ts-ignore
+import VueSpeechRecognition from 'vue-speech-recognition';
 
 // 设定moment区域为中国
 import moment from "moment";
@@ -20,6 +22,7 @@ const app = createApp(App)
 app.config.globalProperties.$axios = axios
 app.use(store)
 app.use(router)
+app.use(VueSpeechRecognition)
 // app.use(ElementPlus)
 app.use(ElementPlus, {
     locale: zhCn,

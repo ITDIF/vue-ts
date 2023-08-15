@@ -219,10 +219,10 @@ const validatePassword = (rule: any, value: any, callback: any) => {
   }
 }
 const rules = reactive<FormRules>({
-  email:[
-    { required: true, message: '请输入原电子邮箱', trigger: 'change'},
-    { pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, message: '电子邮箱格式错误', trigger: 'blur'}
-  ],
+  // email:[
+  //   { required: true, message: '请输入原电子邮箱', trigger: 'change'},
+  //   { pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, message: '电子邮箱格式错误', trigger: 'blur'}
+  // ],
   newEmail:[
     { required: true, message: '请输入新电子邮箱', trigger: 'change'},
     { pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, message: '电子邮箱格式错误', trigger: 'blur'}
@@ -232,7 +232,8 @@ const rules = reactive<FormRules>({
     { validator: validatePassword, trigger: 'blur'}
   ],
   code:[
-    { required: true, message: '请输入验证码', trigger: 'change'}
+    { required: true, message: '请输入验证码', trigger: 'change'},
+    { len: 4, pattern: /^\d{4}$/, message: '验证码格式错误', trigger: 'blur'}
   ]
 })
 const handleSelect = (key: string, keyPath: string[]) => {

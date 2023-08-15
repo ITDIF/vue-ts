@@ -234,7 +234,8 @@ const rules = reactive<FormRules>({
     { validator: validatePassword, trigger: 'blur'}
   ],
   code:[
-    { required: true, message: '请输入验证码', trigger: 'change'}
+    { required: true, message: '请输入验证码', trigger: 'change'},
+    { len: 4, pattern: /^\d{4}$/, message: '验证码格式错误', trigger: 'blur'}
   ]
 })
 

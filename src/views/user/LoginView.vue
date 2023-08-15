@@ -8,7 +8,7 @@
   <div class="content">
     <div class="login-box">
       <el-card shadow="never" style="width: 80%;padding-bottom: 20px">
-        <h1>登 录</h1>
+        <h1>登 录 <el-text><a style="cursor: pointer;" @click="router.push('/fastLogin')">验证码登录</a></el-text></h1>
         <el-form>
           <el-form-item>
             <el-input v-model="form.account" size="large" clearable placeholder="用户名/手机号" :prefix-icon="User"></el-input>
@@ -39,8 +39,8 @@ import type { FormInstance } from 'element-plus'
 import { ElMessage } from 'element-plus'
 import {useStore} from "vuex";
 const form = reactive({
-  account: 's123',
-  password: '123',
+  account: '',
+  password: '',
   error: ''
 })
 const store = useStore()

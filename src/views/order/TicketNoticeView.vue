@@ -24,22 +24,28 @@
       <el-col :span="3" style="margin: auto 0;">
         <el-text style="font-size: large;color: black">{{e.from_station.slice(e.from_station.indexOf('市')+1)}}</el-text>
       </el-col>
-      <el-col :span="3">
+      <el-col :span="4">
         {{e.route_number}}<br>
         <el-text>------------></el-text>
       </el-col>
       <el-col :span="3" style="margin: auto 0;">
         <el-text style="font-size: large;color: black">{{e.to_station.slice(e.to_station.indexOf('市')+1)}}</el-text>
       </el-col>
-    </el-row>
-    <el-row style="margin-top: 14px;">
-      <el-col :span="3">
+      <el-col :span="3" style="margin: auto 0;">
         <el-text size="large"><b>{{e.seat_id}}</b>号</el-text>
       </el-col>
-      <el-col :span="2">
+      <el-col :span="2" style="margin: auto 0;">
         <el-text size="large">{{e.seat_type}}</el-text>
       </el-col>
     </el-row>
+<!--    <el-row style="margin-top: 14px;">-->
+<!--      <el-col :span="3">-->
+<!--        <el-text size="large"><b>{{e.seat_id}}</b>号</el-text>-->
+<!--      </el-col>-->
+<!--      <el-col :span="2">-->
+<!--        <el-text size="large">{{e.seat_type}}</el-text>-->
+<!--      </el-col>-->
+<!--    </el-row>-->
     <el-row style="margin-top: 14px;">
       <el-col :span="5">
         <el-text><b>限乘当日当次车</b></el-text>
@@ -52,8 +58,6 @@
       <el-col :span="6">
         <el-text><b>{{e.id_number.slice(0,3)}}*****{{e.id_number.slice(15)}}</b></el-text>
       </el-col>
-    </el-row>
-    <el-row style="margin-top: 14px;">
       <el-col :span="7">
         <el-text><b>订单号：{{e.order_number}}</b></el-text>
       </el-col>
@@ -61,6 +65,14 @@
         <el-text>票价：{{e.price}} 元</el-text>
       </el-col>
     </el-row>
+<!--    <el-row style="margin-top: 14px;">-->
+<!--      <el-col :span="7">-->
+<!--        <el-text><b>订单号：{{e.order_number}}</b></el-text>-->
+<!--      </el-col>-->
+<!--      <el-col :span="5">-->
+<!--        <el-text>票价：{{e.price}} 元</el-text>-->
+<!--      </el-col>-->
+<!--    </el-row>-->
     <el-divider/>
     <el-text style="color: black;">温馨提示</el-text><br>
     <ul style="text-align: left; font-size: small; list-style-type: decimal;">

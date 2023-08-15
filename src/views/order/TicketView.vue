@@ -23,7 +23,7 @@
           <el-tab-pane v-for="item in form.days" :name="item" :label="item"></el-tab-pane>
           <el-table
               border
-              :data="form.tableData"
+              :data="tickets.pageData"
               :default-sort="{prop: 'departure_time'}"
               :header-cell-style="{textAlign: 'center'}"
               :cell-style="{ textAlign: 'center' }"
@@ -32,9 +32,9 @@
             <el-table-column prop="from_station" label="出发地点" />
             <el-table-column prop="to_station" label="到达地点" />
             <el-table-column prop="departure_time" sortable label="出发时间" />
-            <el-table-column prop="seat_type" label="类型"/>
-            <el-table-column prop="remaining_tickets" label="余票" />
-            <el-table-column prop="price" label="票价" />
+            <el-table-column prop="seat_type" label="类型" width="80"/>
+            <el-table-column prop="remaining_tickets" label="余票" width="80"/>
+            <el-table-column prop="price" label="票价" width="80"/>
             <el-table-column label="备注">
               <template #default="scope">
                 <el-button type="primary" :disabled="isClick(scope.row.remaining_tickets)" @click="submit(scope.row)" style="margin: auto">预订</el-button>
@@ -44,6 +44,19 @@
           </el-table>
         </el-tabs>
       </el-main>
+      <el-row>
+        <el-col :span="10" :offset="7">
+          <el-pagination
+              v-model:current-page="tickets.currentPage"
+              background
+              layout="prev, pager, next, total"
+              :total="tickets.total"
+              :page-size="tickets.pageSize"
+              @click="pageChange"
+              hide-on-single-page
+          />
+        </el-col>
+      </el-row>
       <el-footer></el-footer>
     </el-container>
   </div>
@@ -74,6 +87,12 @@ const form = reactive({
   now: time?.slice(5),
   tableData: []
 })
+const tickets = reactive({
+  total : 0,
+  currentPage: 1,
+  pageSize: 10,
+  pageData: [] as any
+})
 onBeforeMount(()=>{
   // console.log(isRebook,route.query.start,route.query.end)
   for (let i = 0; i <= 10; i++) {
@@ -87,6 +106,8 @@ onBeforeMount(()=>{
     }
   }).then((res)=>{
     form.tableData = res.data
+    tickets.total = res.data.length
+    pageChange()
     // ElMessage(res.data);
   })
 })
@@ -107,9 +128,18 @@ const tabClick = () =>{
   }).then((res)=>{
     // console.log(res.data)
     form.tableData = res.data
+    tickets.total = res.data.length
+    pageChange()
   })
 }
-
+const pageChange = () => {
+  if(tickets.total != 0 && form.tableData.slice((tickets.currentPage-1)*tickets.pageSize,
+      tickets.currentPage*tickets.pageSize).length == 0){
+    tickets.currentPage --
+  }
+  tickets.pageData = form.tableData.slice((tickets.currentPage-1)*tickets.pageSize,
+      tickets.currentPage*tickets.pageSize)
+}
 
 interface routeInfo {
   route_number: string

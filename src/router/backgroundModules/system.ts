@@ -60,6 +60,11 @@ const System: Array<RouteRecordRaw> = [
                 name: 'adminInformation',
                 component: () => import('@/views/management/admin/AdminInformationView.vue')
             },
+            {
+                path: 'homes',
+                name: 'homes',
+                component: () => import('@/views/management/admin/HomePageView.vue')
+            },
         ]
     },
 ]

@@ -1,247 +1,65 @@
 <template>
-  <el-cascader :options="options" v-model="opv" @change="change">
-    <template #default="{ node, data }">
-      <span>{{ data.label }}</span>
-      <span v-if="!node.isLeaf"> ({{ data.children.length }}) </span>
-    </template>
-  </el-cascader>
+  <div>
+    <button @click="startRecording" :disabled="isRecording">开始录音</button>
+    <button @click="stopRecording" :disabled="!isRecording">停止录音</button>
+    <button @click="playRecording" :disabled="isPlaying">播放录音</button>
+  </div>
 </template>
 
-<script lang="ts" setup>
-import {ref} from "vue";
+<script lang="ts">
+import { defineComponent } from 'vue';
 
-const opv = ref()
-const change = () => {
-  console.log('change ',opv,opv.value[0])
-}
-const options = [
-  {
-    value: 'guide',
-    label: 'Guide',
+export default defineComponent({
+  data() {
+    return {
+      mediaRecorder: null as MediaRecorder | null,
+      audioChunks: [] as Blob[],
+      isRecording: false,
+      isPlaying: false,
+    };
   },
-  {
-    value: 'component',
-    label: 'Component',
-    children: [
-      {
-        value: 'basic',
-        label: 'Basic',
-        children: [
-          {
-            value: 'layout',
-            label: 'Layout',
-          },
-          {
-            value: 'color',
-            label: 'Color',
-          },
-          {
-            value: 'typography',
-            label: 'Typography',
-          },
-          {
-            value: 'icon',
-            label: 'Icon',
-          },
-          {
-            value: 'button',
-            label: 'Button',
-          },
-        ],
-      },
-      {
-        value: 'form',
-        label: 'Form',
-        children: [
-          {
-            value: 'radio',
-            label: 'Radio',
-          },
-          {
-            value: 'checkbox',
-            label: 'Checkbox',
-          },
-          {
-            value: 'input',
-            label: 'Input',
-          },
-          {
-            value: 'input-number',
-            label: 'InputNumber',
-          },
-          {
-            value: 'select',
-            label: 'Select',
-          },
-          {
-            value: 'cascader',
-            label: 'Cascader',
-          },
-          {
-            value: 'switch',
-            label: 'Switch',
-          },
-          {
-            value: 'slider',
-            label: 'Slider',
-          },
-          {
-            value: 'time-picker',
-            label: 'TimePicker',
-          },
-          {
-            value: 'date-picker',
-            label: 'DatePicker',
-          },
-          {
-            value: 'datetime-picker',
-            label: 'DateTimePicker',
-          },
-          {
-            value: 'upload',
-            label: 'Upload',
-          },
-          {
-            value: 'rate',
-            label: 'Rate',
-          },
-          {
-            value: 'form',
-            label: 'Form',
-          },
-        ],
-      },
-      {
-        value: 'data',
-        label: 'Data',
-        children: [
-          {
-            value: 'table',
-            label: 'Table',
-          },
-          {
-            value: 'tag',
-            label: 'Tag',
-          },
-          {
-            value: 'progress',
-            label: 'Progress',
-          },
-          {
-            value: 'tree',
-            label: 'Tree',
-          },
-          {
-            value: 'pagination',
-            label: 'Pagination',
-          },
-          {
-            value: 'badge',
-            label: 'Badge',
-          },
-        ],
-      },
-      {
-        value: 'notice',
-        label: 'Notice',
-        children: [
-          {
-            value: 'alert',
-            label: 'Alert',
-          },
-          {
-            value: 'loading',
-            label: 'Loading',
-          },
-          {
-            value: 'message',
-            label: 'Message',
-          },
-          {
-            value: 'message-box',
-            label: 'MessageBox',
-          },
-          {
-            value: 'notification',
-            label: 'Notification',
-          },
-        ],
-      },
-      {
-        value: 'navigation',
-        label: 'Navigation',
-        children: [
-          {
-            value: 'menu',
-            label: 'Menu',
-          },
-          {
-            value: 'tabs',
-            label: 'Tabs',
-          },
-          {
-            value: 'breadcrumb',
-            label: 'Breadcrumb',
-          },
-          {
-            value: 'dropdown',
-            label: 'Dropdown',
-          },
-          {
-            value: 'steps',
-            label: 'Steps',
-          },
-        ],
-      },
-      {
-        value: 'others',
-        label: 'Others',
-        children: [
-          {
-            value: 'dialog',
-            label: 'Dialog',
-          },
-          {
-            value: 'tooltip',
-            label: 'Tooltip',
-          },
-          {
-            value: 'popover',
-            label: 'Popover',
-          },
-          {
-            value: 'card',
-            label: 'Card',
-          },
-          {
-            value: 'carousel',
-            label: 'Carousel',
-          },
-          {
-            value: 'collapse',
-            label: 'Collapse',
-          },
-        ],
-      },
-    ],
+  methods: {
+    startRecording() {
+      navigator.mediaDevices.getUserMedia({ audio: true })
+          .then((stream) => {
+            this.mediaRecorder = new MediaRecorder(stream);
+            this.mediaRecorder.addEventListener('dataavailable', (event) => {
+              if (event.data.size > 0) {
+                this.audioChunks.push(event.data);
+              }
+            });
+            this.mediaRecorder.start();
+            this.isRecording = true;
+          })
+          .catch((error) => {
+            console.error('Error accessing microphone:', error);
+          });
+    },
+    stopRecording() {
+      if (this.mediaRecorder) {
+        this.mediaRecorder.stop();
+        this.mediaRecorder = null;
+        this.isRecording = false;
+      }
+    },
+    playRecording() {
+      if (this.audioChunks.length === 0) {
+        console.warn('No recording available');
+        return;
+      }
+
+      const audioBlob = new Blob(this.audioChunks, { type: 'audio/wav' });
+      const audioUrl = URL.createObjectURL(audioBlob);
+
+      const audio = new Audio(audioUrl);
+      audio.play();
+      audio.addEventListener('ended', () => {
+        URL.revokeObjectURL(audioUrl);
+        this.isPlaying = false;
+      });
+
+      this.isPlaying = true;
+    },
   },
-  {
-    value: 'resource',
-    label: 'Resource',
-    children: [
-      {
-        value: 'axure',
-        label: 'Axure Components',
-      },
-      {
-        value: 'sketch',
-        label: 'Sketch Templates',
-      },
-      {
-        value: 'docs',
-        label: 'Design Documentation',
-      },
-    ],
-  },
-]
+});
 </script>

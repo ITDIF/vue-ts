@@ -18,7 +18,7 @@
           <el-sub-menu index="sys">
             <template #title>个人中心</template>
             <el-menu-item index="adminInformation"><el-icon><User /></el-icon>用户信息</el-menu-item>
-            <el-menu-item><el-icon><Setting /></el-icon>用户设置</el-menu-item>
+<!--            <el-menu-item><el-icon><Setting /></el-icon>用户设置</el-menu-item>-->
             <el-menu-item @click="quit"><el-icon><CloseBold /></el-icon>退出登录</el-menu-item>
           </el-sub-menu>
         </el-menu>
@@ -32,7 +32,7 @@
               :collapse="isCollapse"
               @select="handleSelect"
           >
-            <el-menu-item>
+            <el-menu-item index="homes">
               <el-icon><location /></el-icon>
               <template #title>
                 <span>首页</span>
