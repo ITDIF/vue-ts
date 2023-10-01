@@ -101,7 +101,7 @@
                     <el-button
                         type="warning"
                         style="width: 80px"
-                        @click="onlinePayment(e.order_number, e.state)"
+                        @click="onlinePayment(e.order_number, e.state,e.price)"
                     >去支付</el-button>
                   </el-col>
                 </el-row>
@@ -345,7 +345,8 @@ const cancelOrder = (url: string) => {
   axios.get(url,{
     params:{
       order_number: cancelOrderNumber.value,
-      date: moment(cancelDate.value).format("YYYY-MM-DD")
+      date: moment(cancelDate.value).format("YYYY-MM-DD"),
+      account: store.state.account
     }
   }).then((res)=>{
     if(res.data == '1'){
@@ -470,7 +471,16 @@ const pageChange = () =>{
   })
 }
 //网上支付
-const onlinePayment = (orderNumber: string, state: string) => {
+const onlinePayment = async (orderNumber: string, state: string, price: string) => {
+  let flag = await isAllowPay(price)
+  if(!flag){
+    ElMessage({
+      showClose: true,
+      message: '余额不足，请先充值！',
+      type: 'error',
+    })
+    return
+  }
   console.log('网上支付！',orderNumber)
   let url = '';
   if(state == '未付款'){
@@ -480,7 +490,8 @@ const onlinePayment = (orderNumber: string, state: string) => {
   }
   axios.get(url,{
     params:{
-      orderNumber: orderNumber
+      orderNumber: orderNumber,
+      account: store.state.account
     }
   }).then((res)=>{
     console.log(res.data)
@@ -500,6 +511,19 @@ const onlinePayment = (orderNumber: string, state: string) => {
       tabOne()
     }
   })
+}
+const isAllowPay = async (price: string) => {
+  let flag = false
+  await axios.get('http://localhost:8081/user/queryUserMoneyAndIntegralByAccount',{
+    params:{
+      account: store.state.account
+    }
+  }).then((res)=>{
+    if(res.data.money >= price){
+      flag = true
+    }
+  })
+  return flag
 }
 //改签
 const rebook = (e : any) => {
@@ -532,6 +556,7 @@ const loginCheck = () => {
   }
   return true
 }
+
 const pageFunction = ref(pageChange as any)
 </script>
 

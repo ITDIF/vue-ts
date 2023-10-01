@@ -62,7 +62,7 @@
                 <span>客户服务</span>
               </template>
               <el-menu-item index="customerLists"><el-icon><Connection /></el-icon>接待列表</el-menu-item>
-              <el-menu-item index="customerServices"><el-icon><ChatLineSquare /></el-icon>接待</el-menu-item>
+<!--              <el-menu-item index="customerServices"><el-icon><ChatLineSquare /></el-icon>接待</el-menu-item>-->
             </el-sub-menu>
           </el-menu>
           <el-affix>

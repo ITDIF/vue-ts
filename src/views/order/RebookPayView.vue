@@ -169,12 +169,22 @@ const cancelOrder = () => {
     }
   })
 }
-const onlinePayment = () => {
+const onlinePayment = async () => {
+  let flag = await isAllowPay()
+  if(!flag){
+    ElMessage({
+      showClose: true,
+      message: '余额不足，请先充值！',
+      type: 'error',
+    })
+    return
+  }
   console.log('网上支付！')
   axios.get('http://localhost:8081/order/addOrderAndDelTemporaryAndUpOldOrder',{
     params:{
       orderNumber: orderId,
-      oldOrderNumber: route.query.rebookNumber
+      oldOrderNumber: route.query.rebookNumber,
+      account: store.state.account
     }
   }).then((res)=>{
     console.log(res.data)
@@ -193,6 +203,19 @@ const onlinePayment = () => {
       })
     }
   })
+}
+const isAllowPay = async () => {
+  let flag = false
+  await axios.get('http://localhost:8081/user/queryUserMoneyAndIntegralByAccount',{
+    params:{
+      account: store.state.account
+    }
+  }).then((res)=>{
+    if(res.data.money >= routeInfo.price){
+      flag = true
+    }
+  })
+  return flag
 }
 </script>
 

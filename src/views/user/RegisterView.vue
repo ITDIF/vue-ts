@@ -159,7 +159,7 @@ const rules = reactive<FormRules>({
   ],
   id_number:[
     { required: true, message: '请输入证件号码', trigger: 'blur'},
-    { min:1, max:18, message: '证件号码格式错误！', trigger: 'blur'}
+    { min:18, max:18, message: '证件号码格式错误！', trigger: 'blur'}
   ],
   phone_number:[
     { required: true, message: '请输入手机号码', trigger: 'blur'},

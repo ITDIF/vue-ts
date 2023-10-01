@@ -74,7 +74,8 @@ const onSubmit = () => {
       store.commit('changeUsername',res.data.username)
       store.commit('changeLogin',res.data.username)
       store.commit('changeRegister','退出')
-      window.history.back()
+      // window.history.back()
+      router.push('/')
     }else if(res.data.code == -1){
       ElMessage({
         showClose: true,

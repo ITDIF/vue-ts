@@ -1,8 +1,9 @@
 <template>
   <el-text style="float: left">
-    用户
+    用户: {{account}}
 <!--    <el-icon v-if="!staff.online" class="is-loading"><Loading/></el-icon>-->
   </el-text>
+  <el-text style="float: right;cursor: pointer" @click="router.push('customerLists')">返回列表</el-text>
   <el-divider/>
   <div style="height: 300px">
     <el-scrollbar ref="scrollbar" max-height="300px" always>
@@ -77,7 +78,8 @@ import moment from "moment";
 import {useStore} from "vuex";
 import axios from "axios";
 import {icons} from "@element-plus/icons-vue/dist/types/global";
-import {useRoute} from "vue-router";
+import {useRoute, useRouter} from "vue-router";
+import {ElMessage, UploadProps} from "element-plus";
 const msgInput = ref()
 const scrollbar = ref()
 const store = useStore()
@@ -85,6 +87,7 @@ let ws = null as any
 let connected = false;
 let reconnectAttempts = 0;
 const route = useRoute()
+const router = useRouter()
 const account = route.query.account
 const MAX_RECONNECT_ATTEMPTS = 10; // 最大重连次数
 const RECONNECT_INTERVAL = 5000; // 重连间隔时间，单位为毫秒
@@ -222,6 +225,16 @@ const heartCheck = {
     }, this.timeout)
   }
 };
+const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
+  if (rawFile.type !== 'image/jpeg') {
+    ElMessage.error('上传的必须是图片!')
+    return false
+  } else if (rawFile.size / 1024 / 1024 > 20) {
+    ElMessage.error('图片大小不能超过 2MB!')
+    return false
+  }
+  return true
+}
 const handleSelect = (key: string, keyPath: string[]) => {
   console.log(key)
   // router.push(store.state.route[key])

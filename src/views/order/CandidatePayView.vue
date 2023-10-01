@@ -48,7 +48,7 @@
             @click="onlinePayment"
         >网上支付</el-button>
       </el-main>
-      <el-footer>Footer</el-footer>
+      <el-footer></el-footer>
     </el-container>
   </div>
   <el-dialog
@@ -77,8 +77,10 @@ import {useRoute, useRouter} from "vue-router";
 import moment from "moment";
 import axios from "axios";
 import {ElMessage, ElMessageBox} from "element-plus";
+import {useStore} from "vuex";
 const route = useRoute()
 const router = useRouter()
+const store = useStore()
 const formRef = ref<FormInstance>()
 const routeInfo = JSON.parse(route.query.routeInfo as string)
 const account = route.query.account
@@ -158,11 +160,21 @@ const cancelOrder = () => {
   })
 }
 //支付
-const onlinePayment = () => {
+const onlinePayment = async () => {
+  let flag = await isAllowPay()
+  if(!flag){
+    ElMessage({
+      showClose: true,
+      message: '余额不足，请先充值！',
+      type: 'error',
+    })
+    return
+  }
   console.log('网上支付！')
   axios.get('http://localhost:8081/order/candidateSuccess',{
     params:{
-      order_number: orderId
+      order_number: orderId,
+      account: store.state.account
     }
   }).then((res)=>{
     console.log(res.data)
@@ -172,7 +184,7 @@ const onlinePayment = () => {
         message: '支付成功！',
         type: 'success',
       })
-      window.history.back()
+      router.push('/candidateOrderView')
     }else{
       ElMessage({
         showClose: true,
@@ -181,6 +193,19 @@ const onlinePayment = () => {
       })
     }
   })
+}
+const isAllowPay = async () => {
+  let flag = false
+  await axios.get('http://localhost:8081/user/queryUserMoneyAndIntegralByAccount',{
+    params:{
+      account: store.state.account
+    }
+  }).then((res)=>{
+    if(res.data.money >= routeInfo.price){
+      flag = true
+    }
+  })
+  return flag
 }
 </script>
 

@@ -3,8 +3,9 @@
     <el-container>
       <el-main>
         <el-carousel :interval="5000" arrow="never" style="position: relative;">
-          <el-carousel-item v-for="item in 4" :key="item">
-            <h3 text="2xl" justify="center">{{ item }}</h3>
+          <el-carousel-item v-for="item in images.data" :key="item">
+<!--            <h3 text="2xl" justify="center">{{ item }}</h3>-->
+            <el-image :src="item" style="height: 350px;"/>
           </el-carousel-item>
           <el-card
               style="background-color: #ffffff;
@@ -88,6 +89,11 @@ const formRef = ref<FormInstance>()
 const store = useStore()
 const account = store.state.account
 
+const images = reactive({
+  data:['https://www.12306.cn/index/images/pic/banner20201223.jpg',
+    'https://www.12306.cn/index/images/pic/banner20201223.jpg',
+    'https://www.12306.cn/index/images/pic/banner20201223.jpg']
+})
 defineComponent({
   components: {
     Layout

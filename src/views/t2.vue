@@ -1,65 +1,52 @@
 <template>
   <div>
-    <button @click="startRecording" :disabled="isRecording">开始录音</button>
-    <button @click="stopRecording" :disabled="!isRecording">停止录音</button>
-    <button @click="playRecording" :disabled="isPlaying">播放录音</button>
+    <el-upload
+        action="#"
+        :before-upload="handleBeforeUpload"
+        :on-change="handleUpload"
+        :auto-upload="false"
+    >
+      <el-button slot="trigger" size="small" type="primary">点击上传</el-button>
+    </el-upload>
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script lang="ts" setup>
+import { read, readFile, utils } from 'xlsx';
+import * as XLSX from 'xlsx';
 
-export default defineComponent({
-  data() {
-    return {
-      mediaRecorder: null as MediaRecorder | null,
-      audioChunks: [] as Blob[],
-      isRecording: false,
-      isPlaying: false,
-    };
-  },
-  methods: {
-    startRecording() {
-      navigator.mediaDevices.getUserMedia({ audio: true })
-          .then((stream) => {
-            this.mediaRecorder = new MediaRecorder(stream);
-            this.mediaRecorder.addEventListener('dataavailable', (event) => {
-              if (event.data.size > 0) {
-                this.audioChunks.push(event.data);
-              }
-            });
-            this.mediaRecorder.start();
-            this.isRecording = true;
-          })
-          .catch((error) => {
-            console.error('Error accessing microphone:', error);
-          });
-    },
-    stopRecording() {
-      if (this.mediaRecorder) {
-        this.mediaRecorder.stop();
-        this.mediaRecorder = null;
-        this.isRecording = false;
-      }
-    },
-    playRecording() {
-      if (this.audioChunks.length === 0) {
-        console.warn('No recording available');
-        return;
-      }
+const handleBeforeUpload = (file: any) => {
+  const allowedExtensions = ['.xlsx', '.xls'];
+  const extension = file.name.substring(file.name.lastIndexOf('.')).toLowerCase();
 
-      const audioBlob = new Blob(this.audioChunks, { type: 'audio/wav' });
-      const audioUrl = URL.createObjectURL(audioBlob);
+  if (!allowedExtensions.includes(extension)) {
+    // this.message.error('只允许上传Excel文件');
+    return false;
+  }
+  return true;
+}
+const handleUpload = (file: any) => {
+  const reader = new FileReader()
+  // reader.readAsBinaryString(file)
+  const data = new Uint8Array(file);
+  const workbook = XLSX.read(data, { type: 'array' });
 
-      const audio = new Audio(audioUrl);
-      audio.play();
-      audio.addEventListener('ended', () => {
-        URL.revokeObjectURL(audioUrl);
-        this.isPlaying = false;
-      });
+  const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+  const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+  console.log(jsonData); // 数据在这里
+}
+const handleFileUpload = (file: any) => {
+  const reader = new FileReader();
 
-      this.isPlaying = true;
-    },
-  },
-});
+  reader.onload = (e) => {
+    const data = new Uint8Array((e.target as FileReader).result as ArrayBuffer);
+    const workbook = XLSX.read(data, { type: 'array' });
+
+    const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+    const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+    console.log(jsonData); // 数据在这里
+  };
+
+  reader.readAsArrayBuffer(file);
+};
 </script>

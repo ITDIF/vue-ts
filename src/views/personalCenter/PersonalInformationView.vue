@@ -70,6 +70,19 @@
             </el-descriptions-item>
             <el-descriptions-item label="地址">{{user.info.district}}</el-descriptions-item>
           </el-descriptions>
+          <el-divider/>
+          <el-descriptions title="余额与积分">
+            <template #extra>
+              <el-button type="primary" @click="">充值</el-button>
+              <el-button type="primary" @click="">提现</el-button>
+            </template>
+            <el-descriptions-item label="余额">
+              {{user.info.money}} 元
+            </el-descriptions-item>
+            <el-descriptions-item label="积分">
+              {{user.info.integral}}
+            </el-descriptions-item>
+          </el-descriptions>
         </el-card>
       </el-main>
     </el-container>

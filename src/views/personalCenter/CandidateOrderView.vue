@@ -109,7 +109,7 @@
                     >修改截止兑换时间</el-button>
                     <el-button
                         type="warning"
-                        @click="onlinePayment(e.order_number)"
+                        @click="onlinePayment(e.order_number,e.price)"
                     >继续支付</el-button>
                   </el-col>
                 </el-row>
@@ -161,7 +161,7 @@
                 </el-row>
                 <el-divider style="margin: 12px 0 12px 0" />
                 <el-row>
-                  <el-col :span="8" :offset="16">
+                  <el-col :span="4" :offset="20">
                     <el-button
                         type="info"
                         style="width: 80px;margin-right: 20px"
@@ -169,10 +169,10 @@
                         currentOrderNumber = e.order_number;
                         cancelDate = e.departure_time"
                     >取消</el-button>
-                    <el-button
-                        type="warning"
-                        style="width: 80px"
-                    >修改</el-button>
+<!--                    <el-button-->
+<!--                        type="warning"-->
+<!--                        style="width: 80px"-->
+<!--                    >修改</el-button>-->
                   </el-col>
                 </el-row>
               </div>
@@ -392,6 +392,7 @@ const cancelOrder = (url: string) => {
   axios.get(url,{
     params:{
       order_number: currentOrderNumber.value,
+      account: store.state.account
     }
   }).then((res)=>{
     if(res.data == '1'){
@@ -514,11 +515,21 @@ const pageChange = () =>{
   })
 }
 //网上支付
-const onlinePayment = (orderNumber: string) => {
+const onlinePayment = async (orderNumber: string, price: string) => {
+  let flag = await isAllowPay(price)
+  if(!flag){
+    ElMessage({
+      showClose: true,
+      message: '余额不足，请先充值！',
+      type: 'error',
+    })
+    return
+  }
   console.log('网上支付！')
   axios.get('http://localhost:8081/order/candidateSuccess',{
     params:{
-      order_number: orderNumber
+      order_number: orderNumber,
+      account: store.state.account
     }
   }).then((res)=>{
     console.log(res.data)
@@ -537,6 +548,19 @@ const onlinePayment = (orderNumber: string) => {
       })
     }
   })
+}
+const isAllowPay = async (price: string) => {
+  let flag = false
+  await axios.get('http://localhost:8081/user/queryUserMoneyAndIntegralByAccount',{
+    params:{
+      account: store.state.account
+    }
+  }).then((res)=>{
+    if(res.data.money >= price){
+      flag = true
+    }
+  })
+  return flag
 }
 const queryDeadline = (orderNumber: String) => {
   axios.get('http://localhost:8081/candidate/queryDeadlineOrderNumber',{

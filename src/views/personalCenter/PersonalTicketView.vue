@@ -205,7 +205,8 @@ const cancelTicket = (orderNumber: string, time: string) => {
         axios.get('http://localhost:8081/order/upOrderAndDelTicket',{
           params:{
             order_number: orderNumber,
-            date: moment(time).format("YYYY-MM-DD")
+            date: moment(time).format("YYYY-MM-DD"),
+            account: store.state.account
           }
         }).then((res)=>{
           if(res.data == '1'){

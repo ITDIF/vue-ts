@@ -78,8 +78,10 @@ import {useRoute, useRouter} from "vue-router";
 import moment from "moment";
 import axios from "axios";
 import {ElMessage, ElMessageBox} from "element-plus";
+import {useStore} from "vuex";
 const route = useRoute()
 const router = useRouter()
+const store = useStore()
 const formRef = ref<FormInstance>()
 const routeInfo = JSON.parse(route.query.routeInfo as string)
 const account = route.query.account
@@ -120,9 +122,9 @@ async function loadData(){
       account: account
     }
   }).then((res)=>{
-    console.log(111,res.data)
+    // console.log(111,res.data)
     res.data.seat_type = routeInfo.seat_type
-    res.data.price = routeInfo.price+'元'
+    res.data.price = routeInfo.price
     orderInfo.user.push(res.data)
   })
   axios.get('http://localhost:8081/order/queryOrderTimeAndSeatByOrderNumber',{
@@ -130,11 +132,11 @@ async function loadData(){
       order_number: orderId
     }
   }).then((res)=>{
-    console.log(222,res.data)
+    // console.log(222,res.data)
     orderTime = res.data.order_time
     countdown.time -= moment().diff(moment(orderTime))
     orderInfo.user[0].seat_id = res.data.seat_id
-    console.log('orderTimeDiffs',moment().diff(moment(orderTime)))
+    // console.log('orderTimeDiffs',moment().diff(moment(orderTime)))
   })
 }
 
@@ -150,7 +152,7 @@ const cancelOrder = () => {
       date: carInfo.date
     }
   }).then((res)=>{
-    console.log(res.data)
+    // console.log(res.data)
     if(res.data == '1'){
       ElMessage({
         showClose: true,
@@ -167,11 +169,21 @@ const cancelOrder = () => {
     }
   })
 }
-const onlinePayment = () => {
+const onlinePayment = async () => {
+  let flag = await isAllowPay()
+  if(!flag){
+    ElMessage({
+      showClose: true,
+      message: '余额不足，请先充值！',
+      type: 'error',
+    })
+    return
+  }
   console.log('网上支付！')
   axios.get('http://localhost:8081/order/addOrderAndDelTemporary',{
     params:{
-      orderNumber: orderId
+      orderNumber: orderId,
+      account: store.state.account
     }
   }).then((res)=>{
     console.log(res.data)
@@ -190,6 +202,19 @@ const onlinePayment = () => {
       })
     }
   })
+}
+const isAllowPay = async () => {
+  let flag = false
+  await axios.get('http://localhost:8081/user/queryUserMoneyAndIntegralByAccount',{
+    params:{
+      account: store.state.account
+    }
+  }).then((res)=>{
+    if(res.data.money >= routeInfo.price){
+      flag = true
+    }
+  })
+  return flag
 }
 </script>
 

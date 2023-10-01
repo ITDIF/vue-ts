@@ -36,7 +36,7 @@
       </el-popconfirm>
     </el-col>
     <el-col :span="2">
-      <el-button type="success" @click="dialogVisible2=true;dialogDate2={}">添加</el-button>
+      <el-button type="success" disabled @click="dialogVisible2=true;dialogDate2={}">添加</el-button>
     </el-col>
     <el-col :span="1">
       <el-button type="info" @click="refresh">刷新</el-button>
